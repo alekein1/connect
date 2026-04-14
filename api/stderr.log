@@ -1,0 +1,387 @@
+node:internal/modules/cjs/loader:1210
+  throw err;
+  ^
+
+Error: Cannot find module 'express'
+Require stack:
+- /home/connectri4/app.connectriobamba.com/api/index.js
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at require (node:internal/modules/helpers:182:18)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/index.js:1:17)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/connectri4/app.connectriobamba.com/api/index.js',
+    '/usr/local/lsws/fcgi-bin/lsnode.js'
+  ]
+}
+
+Node.js v20.20.0
+node:internal/modules/cjs/loader:1210
+  throw err;
+  ^
+
+Error: Cannot find module 'express'
+Require stack:
+- /home/connectri4/app.connectriobamba.com/api/index.js
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at require (node:internal/modules/helpers:182:18)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/index.js:1:17)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/connectri4/app.connectriobamba.com/api/index.js',
+    '/usr/local/lsws/fcgi-bin/lsnode.js'
+  ]
+}
+
+Node.js v20.20.0
+/home/connectri4/app.connectriobamba.com/api/controllers/productos.controller.js:247
+      doc.image(barcode, 2, 10;
+                            ^^
+
+SyntaxError: missing ) after argument list
+    at wrapSafe (node:internal/modules/cjs/loader:1464:18)
+    at Module._compile (node:internal/modules/cjs/loader:1495:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at require (node:internal/modules/helpers:182:18)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/routes/producto.routes.js:4:23)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+
+Node.js v20.20.0
+/home/connectri4/app.connectriobamba.com/api/controllers/productos.controller.js:247
+      doc.image(barcode, 2, 10;
+                            ^^
+
+SyntaxError: missing ) after argument list
+    at wrapSafe (node:internal/modules/cjs/loader:1464:18)
+    at Module._compile (node:internal/modules/cjs/loader:1495:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at require (node:internal/modules/helpers:182:18)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/routes/producto.routes.js:4:23)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+
+Node.js v20.20.0
+❌ IMEI: Error: Duplicate entry '356034751526160' for key 'unique_imei1'
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at exports.ingresarPorIMEI (/home/connectri4/app.connectriobamba.com/api/controllers/inventario.controller.js:274:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'ER_DUP_ENTRY',
+  errno: 1062,
+  sql: '\n' +
+    '        INSERT INTO inventario_imei (\n' +
+    '          id_producto,\n' +
+    '          id_local,\n' +
+    '          imei1,\n' +
+    '          imei2,\n' +
+    '          estado\n' +
+    "        ) VALUES ('834', 4, '356034751526160', NULL, 'disponible')\n" +
+    '        ',
+  sqlState: '23000',
+  sqlMessage: "Duplicate entry '356034751526160' for key 'unique_imei1'"
+}
+/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/index.js:392
+      throw new TypeError('argument handler must be a function')
+      ^
+
+TypeError: argument handler must be a function
+    at Function.use (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/index.js:392:13)
+    at Function.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/express/lib/application.js:222:21)
+    at Array.forEach (<anonymous>)
+    at Function.use (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/express/lib/application.js:219:7)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/index.js:45:5)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+
+Node.js v20.20.0
+/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/index.js:392
+      throw new TypeError('argument handler must be a function')
+      ^
+
+TypeError: argument handler must be a function
+    at Function.use (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/index.js:392:13)
+    at Function.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/express/lib/application.js:222:21)
+    at Array.forEach (<anonymous>)
+    at Function.use (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/express/lib/application.js:219:7)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/index.js:45:5)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+
+Node.js v20.20.0
+node:internal/modules/cjs/loader:1210
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- /home/connectri4/app.connectriobamba.com/api/index.js
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at require (node:internal/modules/helpers:182:18)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/index.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/connectri4/app.connectriobamba.com/api/index.js',
+    '/usr/local/lsws/fcgi-bin/lsnode.js'
+  ]
+}
+
+Node.js v20.20.0
+node:internal/modules/cjs/loader:1210
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- /home/connectri4/app.connectriobamba.com/api/index.js
+- /usr/local/lsws/fcgi-bin/lsnode.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at require (node:internal/modules/helpers:182:18)
+    at Object.<anonymous> (/home/connectri4/app.connectriobamba.com/api/index.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Module.require (node:internal/modules/cjs/loader:1289:19) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/connectri4/app.connectriobamba.com/api/index.js',
+    '/usr/local/lsws/fcgi-bin/lsnode.js'
+  ]
+}
+
+Node.js v20.20.0
+❌ firmarXmlFactura: Error: El archivo del certificado no existe en la ruta indicada
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:92:11)
+    at extractPkcs12Material (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:66:26)
+    at firmarFacturaXmlDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:178:61)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async firmarXmlFacturaHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:329:18) {
+  status: 400
+}
+❌ firmarXmlFactura: Error: El archivo del certificado no existe en la ruta indicada
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:92:11)
+    at extractPkcs12Material (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:66:26)
+    at firmarFacturaXmlDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:178:61)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async firmarXmlFacturaHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:329:18) {
+  status: 400
+}
+❌ guardarConfiguracionSri: Error: La clave del certificado es incorrecta o el archivo no corresponde a un PKCS12 valido
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at runOpenSsl (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:31:13)
+    at probarCertificadoPkcs12 (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:116:22)
+    at saveSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:305:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async guardarConfigHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:242:18) {
+  status: 400
+}
+❌ generarRideFacturaSri: Error: El documento SRI todavía no está autorizado
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at generarRideFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ride.service.js:518:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generarRideFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:442:18) {
+  status: 400
+}
+❌ generarRideFacturaSri: Error: El documento SRI todavía no está autorizado
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at generarRideFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ride.service.js:518:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async generarRideFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:442:18) {
+  status: 400
+}
+❌ crearVenta: Error: Stock insuficiente para TECNO SPARK 40 PRO / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Los pagos no cuadran con el total
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:953:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Los pagos no cuadran con el total
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:953:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Los pagos no cuadran con el total
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:953:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Los pagos no cuadran con el total
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:953:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Los pagos no cuadran con el total
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:953:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X8d / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X8d / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X8d / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X8d / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:854:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Los pagos no cuadran con el total
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1017:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para NOTE 50 PRO / P
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para NOTE 50 PRO / P
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para NOTE 50 PRO / P
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 865756085773985
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR MAGIC8 LITE / D
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR MAGIC8 LITE / D
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR MAGIC8 LITE / D
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR MAGIC8 LITE / D
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para COMISION DE VENTAS
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para Cable - C tipo Lightning
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para SPARK 40 PRO / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para NOTE 60 PRO / C / NRJ
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarComprobantePdfPorCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: IMEI no disponible: 868870073439223
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 868870073439223
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 868870073439223
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 868870073439223
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 868870073439223
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: Stock insuficiente para NOTE 60 PRO / C / NRJ
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: Stock insuficiente para MICA RM NOTE 14 / 6 UND
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:913:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 356034751691998
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 356034751690172
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)

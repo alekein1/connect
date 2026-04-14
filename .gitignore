@@ -1,0 +1,25 @@
+# Mac
+.DS_Store
+
+# =========================
+# BACKEND / api
+# =========================
+api/node_modules/
+api/.env
+api/db/
+api/uploads/
+api/logs/
+api/tmp/
+api/temp/
+
+# =========================
+# FRONTEND / Laravel
+# =========================
+frontend-connect/.env
+frontend-connect/vendor/
+frontend-connect/node_modules/
+frontend-connect/storage/logs/*
+frontend-connect/storage/framework/cache/*
+frontend-connect/storage/framework/sessions/*
+frontend-connect/storage/framework/views/*
+frontend-connect/bootstrap/cache/*
