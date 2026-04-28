@@ -139,6 +139,7 @@ body{
         <a href="/admin/productos" class="{{ request()->is('admin/productos') ? 'active' : '' }}">💎 Productos</a>
         <a href="/admin/inventario" class="{{ request()->is('admin/inventario') ? 'active' : '' }}">📦 Inventario</a>
         <a href="/admin/caja" class="{{ request()->is('admin/caja') ? 'active' : '' }}">🧾 Caja</a>
+        <a href="/admin/ventas/anulaciones" class="{{ request()->is('admin/ventas/anulaciones') ? 'active' : '' }}">↩️ Anular ventas</a>
 
        <a href="#" onclick="toggleMenu('contableMenu'); return false;"
    class="{{ request()->is('admin/contabilidad*') || request()->is('admin/gastos*') ? 'active' : '' }}">

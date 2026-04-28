@@ -3,8 +3,14 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const comprobanteConfig = require("../config/comprobante");
-const { getSriConfig } = require("../services/sri-config.service");
-const { ensureDetalleVentaImeiColumn } = require("../services/ventas-schema.service");
+const {
+  getSriConfig,
+  ensureSriTables
+} = require("../services/sri-config.service");
+const {
+  ensureDetalleVentaImeiColumn,
+  ensureVentaAnulacionSchema
+} = require("../services/ventas-schema.service");
 
 /* ============================================
    📦 GENERAR SECUENCIAL FACTURA
@@ -71,6 +77,12 @@ function sumarPagos(pagos = []) {
 
 function round2(value) {
   return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+}
+
+function createHttpError(message, statusCode = 400) {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
 }
 
 function getFirstFiniteNumber(...values) {
@@ -212,6 +224,99 @@ function formatDateKey(value) {
   return `${day}${month}${year}`;
 }
 
+function validarFechaIso(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || "").trim());
+}
+
+function resolverFiltroEstadoVentas(value = "PAGADA") {
+  const normalized = String(value || "PAGADA").trim().toUpperCase();
+
+  if (["PAGADA", "ANULADA", "TODAS"].includes(normalized)) {
+    return normalized;
+  }
+
+  throw createHttpError("El filtro de estado debe ser PAGADA, ANULADA o TODAS");
+}
+
+function construirFiltrosVentasAdmin({
+  idLocal,
+  buscar = "",
+  estado = "PAGADA",
+  desde = null,
+  hasta = null
+}) {
+  const where = ["v.id_local = ?"];
+  const params = [idLocal];
+
+  if (estado !== "TODAS") {
+    where.push("v.estado = ?");
+    params.push(estado);
+  }
+
+  if (desde) {
+    if (!validarFechaIso(desde)) {
+      throw createHttpError("La fecha 'desde' debe tener formato YYYY-MM-DD");
+    }
+
+    where.push("DATE(v.fecha_venta) >= ?");
+    params.push(desde);
+  }
+
+  if (hasta) {
+    if (!validarFechaIso(hasta)) {
+      throw createHttpError("La fecha 'hasta' debe tener formato YYYY-MM-DD");
+    }
+
+    where.push("DATE(v.fecha_venta) <= ?");
+    params.push(hasta);
+  }
+
+  if (desde && hasta && desde > hasta) {
+    throw createHttpError("La fecha 'desde' no puede ser mayor que 'hasta'");
+  }
+
+  const termino = String(buscar || "").trim();
+
+  if (termino) {
+    const likeTerm = `%${termino}%`;
+
+    where.push(`
+      (
+        CAST(v.id_venta AS CHAR) = ?
+        OR v.numero_comprobante LIKE ?
+        OR COALESCE(c.nombres, '') LIKE ?
+        OR COALESCE(c.cedula, '') LIKE ?
+        OR COALESCE(u.usuario, '') LIKE ?
+        OR EXISTS (
+          SELECT 1
+          FROM detalle_venta d2
+          INNER JOIN productos p2
+            ON p2.id_producto = d2.id_producto
+          WHERE d2.id_venta = v.id_venta
+            AND (
+              COALESCE(d2.imei, '') LIKE ?
+              OR COALESCE(p2.nombre_producto, '') LIKE ?
+            )
+        )
+      )
+    `);
+    params.push(
+      termino,
+      likeTerm,
+      likeTerm,
+      likeTerm,
+      likeTerm,
+      likeTerm,
+      likeTerm
+    );
+  }
+
+  return {
+    sql: where.join(" AND "),
+    params
+  };
+}
+
 function getLegalNotes() {
   return [
     "El cliente declara que los valores entregados y la presente compra no corresponden a ninguna actividad ilegal o ilicita, ni seran destinados a acciones tipificadas por la ley.",
@@ -349,6 +454,133 @@ async function fetchVentaForComprobante(idVenta, idLocal) {
     ...venta,
     detalle,
     pagos
+  };
+}
+
+async function asegurarStockProductoVenta(connection, idProducto, idLocal) {
+  let [[stock]] = await connection.query(
+    `
+    SELECT id_stock, stock_actual
+    FROM inventario_stock
+    WHERE id_producto = ?
+      AND id_local = ?
+    LIMIT 1
+    FOR UPDATE
+    `,
+    [idProducto, idLocal]
+  );
+
+  if (stock) {
+    return {
+      id_stock: stock.id_stock,
+      stock_actual: Number(stock.stock_actual || 0)
+    };
+  }
+
+  const [result] = await connection.query(
+    `
+    INSERT INTO inventario_stock (id_producto, id_local, stock_actual)
+    VALUES (?, ?, 0)
+    `,
+    [idProducto, idLocal]
+  );
+
+  return {
+    id_stock: result.insertId,
+    stock_actual: 0
+  };
+}
+
+async function fetchVentaAdminDetalle(executor, idVenta, idLocal) {
+  await ensureSriTables();
+  await ensureVentaAnulacionSchema();
+  await ensureDetalleVentaImeiColumn();
+
+  const [[venta]] = await executor.query(
+    `
+    SELECT
+      v.*,
+      c.nombres AS cliente_nombres,
+      c.cedula AS cliente_cedula,
+      c.correo AS cliente_correo,
+      c.telefono AS cliente_telefono,
+      c.direccion AS cliente_direccion,
+      l.nombre_local,
+      u.usuario AS usuario_venta,
+      ua.usuario AS usuario_anulacion,
+      COALESCE((
+        SELECT sd.estado
+        FROM sri_documentos sd
+        WHERE sd.id_venta = v.id_venta
+          AND sd.tipo_comprobante = 'FACTURA'
+        ORDER BY sd.id_documento_sri DESC
+        LIMIT 1
+      ), 'SIN_DOCUMENTO') AS estado_documento_sri
+    FROM ventas v
+    LEFT JOIN clientes c
+      ON c.id_cliente = v.id_cliente
+    LEFT JOIN locales l
+      ON l.id_local = v.id_local
+    LEFT JOIN usuarios u
+      ON u.id_usuario = v.id_usuario
+    LEFT JOIN usuarios ua
+      ON ua.id_usuario = v.id_usuario_anulacion
+    WHERE v.id_venta = ?
+      AND v.id_local = ?
+    LIMIT 1
+    `,
+    [idVenta, idLocal]
+  );
+
+  if (!venta) {
+    return null;
+  }
+
+  const [detalle] = await executor.query(
+    `
+    SELECT
+      d.id_detalle,
+      d.id_producto,
+      d.cantidad,
+      d.imei,
+      d.precio_unitario,
+      d.costo_unitario,
+      d.subtotal,
+      d.costo_total,
+      d.ganancia,
+      p.nombre_producto,
+      p.codigo_barras,
+      p.sku
+    FROM detalle_venta d
+    INNER JOIN productos p
+      ON p.id_producto = d.id_producto
+    WHERE d.id_venta = ?
+    ORDER BY d.id_detalle ASC
+    `,
+    [idVenta]
+  );
+
+  const [pagos] = await executor.query(
+    `
+    SELECT
+      id_pago,
+      monto,
+      forma_pago,
+      fecha_pago
+    FROM ventas_pagos
+    WHERE id_venta = ?
+    ORDER BY id_pago ASC
+    `,
+    [idVenta]
+  );
+
+  return {
+    ...venta,
+    detalle,
+    pagos,
+    puede_anular:
+      venta.estado === "PAGADA" &&
+      venta.estado_documento_sri !== "AUTORIZADO"
   };
 }
 
@@ -1244,6 +1476,400 @@ exports.crearVenta = async (req, res) => {
     res.status(500).json({
       ok: false,
       mensaje: error.message || "Error al crear la venta"
+    });
+  } finally {
+    connection.release();
+  }
+};
+
+exports.listarVentasAdmin = async (req, res) => {
+  try {
+    await ensureSriTables();
+    await ensureVentaAnulacionSchema();
+    await ensureDetalleVentaImeiColumn();
+
+    const idLocal = Number(req.user.id_local || 0);
+    const buscar = String(req.query?.buscar || "").trim();
+    const estado = resolverFiltroEstadoVentas(req.query?.estado || "PAGADA");
+    const desde = req.query?.desde ? String(req.query.desde).trim() : null;
+    const hasta = req.query?.hasta ? String(req.query.hasta).trim() : null;
+    const pageQuery = Number(req.query?.page);
+    const limitQuery = Number(req.query?.limit);
+    const page = Number.isFinite(pageQuery) && pageQuery > 0
+      ? Math.floor(pageQuery)
+      : 1;
+    const limit = Number.isFinite(limitQuery) && limitQuery > 0
+      ? Math.min(50, Math.floor(limitQuery))
+      : 20;
+    const offset = (page - 1) * limit;
+
+    const filtros = construirFiltrosVentasAdmin({
+      idLocal,
+      buscar,
+      estado,
+      desde,
+      hasta
+    });
+
+    const [summaryRows] = await db.query(
+      `
+      SELECT
+        COUNT(*) AS total_registros,
+        COALESCE(SUM(CASE WHEN v.estado = 'PAGADA' THEN 1 ELSE 0 END), 0) AS total_pagadas,
+        COALESCE(SUM(CASE WHEN v.estado = 'ANULADA' THEN 1 ELSE 0 END), 0) AS total_anuladas,
+        COALESCE(SUM(CASE WHEN v.estado = 'PAGADA' THEN v.total ELSE 0 END), 0) AS monto_pagado,
+        COALESCE(SUM(CASE WHEN v.estado = 'ANULADA' THEN v.total ELSE 0 END), 0) AS monto_anulado
+      FROM ventas v
+      LEFT JOIN clientes c
+        ON c.id_cliente = v.id_cliente
+      LEFT JOIN usuarios u
+        ON u.id_usuario = v.id_usuario
+      WHERE ${filtros.sql}
+      `,
+      filtros.params
+    );
+
+    const [rows] = await db.query(
+      `
+      SELECT
+        v.id_venta,
+        v.numero_comprobante,
+        v.fecha_venta,
+        v.total,
+        v.estado,
+        v.tipo_venta,
+        v.forma_pago,
+        v.entrada,
+        v.saldo,
+        v.descuento,
+        v.motivo_anulacion,
+        v.fecha_anulacion,
+        c.nombres AS cliente_nombres,
+        c.cedula AS cliente_cedula,
+        u.usuario,
+        (
+          SELECT COUNT(*)
+          FROM detalle_venta d
+          WHERE d.id_venta = v.id_venta
+        ) AS total_items,
+        COALESCE((
+          SELECT sd.estado
+          FROM sri_documentos sd
+          WHERE sd.id_venta = v.id_venta
+            AND sd.tipo_comprobante = 'FACTURA'
+          ORDER BY sd.id_documento_sri DESC
+          LIMIT 1
+        ), 'SIN_DOCUMENTO') AS estado_documento_sri
+      FROM ventas v
+      LEFT JOIN clientes c
+        ON c.id_cliente = v.id_cliente
+      LEFT JOIN usuarios u
+        ON u.id_usuario = v.id_usuario
+      WHERE ${filtros.sql}
+      ORDER BY v.id_venta DESC
+      LIMIT ?
+      OFFSET ?
+      `,
+      [...filtros.params, limit, offset]
+    );
+
+    const resumen = summaryRows?.[0] || {};
+    const totalRegistros = Number(resumen.total_registros || 0);
+    const totalPaginas = totalRegistros > 0 ? Math.ceil(totalRegistros / limit) : 1;
+
+    res.json({
+      ok: true,
+      filtros: {
+        buscar,
+        estado,
+        desde,
+        hasta,
+        page,
+        limit
+      },
+      resumen: {
+        total_registros: totalRegistros,
+        total_pagadas: Number(resumen.total_pagadas || 0),
+        total_anuladas: Number(resumen.total_anuladas || 0),
+        monto_pagado: round2(resumen.monto_pagado || 0),
+        monto_anulado: round2(resumen.monto_anulado || 0)
+      },
+      paginacion: {
+        page,
+        limit,
+        total_registros: totalRegistros,
+        total_paginas: totalPaginas,
+        has_prev: page > 1,
+        has_next: page < totalPaginas
+      },
+      data: rows.map((row) => ({
+        ...row,
+        total: round2(row.total || 0),
+        entrada: round2(row.entrada || 0),
+        saldo: round2(row.saldo || 0),
+        descuento: round2(row.descuento || 0),
+        total_items: Number(row.total_items || 0),
+        puede_anular:
+          row.estado === "PAGADA" &&
+          row.estado_documento_sri !== "AUTORIZADO"
+      }))
+    });
+  } catch (error) {
+    console.error("❌ listarVentasAdmin:", error);
+    res.status(error.statusCode || 500).json({
+      ok: false,
+      mensaje: error.message || "Error al listar ventas"
+    });
+  }
+};
+
+exports.obtenerDetalleVentaAdmin = async (req, res) => {
+  try {
+    const idVenta = Number(req.params.id || 0);
+    const idLocal = Number(req.user.id_local || 0);
+
+    if (!idVenta) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Id de venta invalido"
+      });
+    }
+
+    const venta = await fetchVentaAdminDetalle(db, idVenta, idLocal);
+
+    if (!venta) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "Venta no encontrada"
+      });
+    }
+
+    res.json({
+      ok: true,
+      venta
+    });
+  } catch (error) {
+    console.error("❌ obtenerDetalleVentaAdmin:", error);
+    res.status(error.statusCode || 500).json({
+      ok: false,
+      mensaje: error.message || "Error al consultar el detalle de la venta"
+    });
+  }
+};
+
+exports.anularVentaAdmin = async (req, res) => {
+  const connection = await db.getConnection();
+  let transactionStarted = false;
+
+  try {
+    await ensureSriTables();
+    await ensureVentaAnulacionSchema();
+    await ensureDetalleVentaImeiColumn();
+
+    const idVenta = Number(req.params.id || 0);
+    const idLocal = Number(req.user.id_local || 0);
+    const idUsuario = Number(req.user.id_usuario || 0);
+    const motivo = String(req.body?.motivo || "").trim().slice(0, 255);
+
+    if (!idVenta) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Id de venta invalido"
+      });
+    }
+
+    if (!motivo) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Debes indicar el motivo de la anulacion"
+      });
+    }
+
+    await connection.beginTransaction();
+    transactionStarted = true;
+
+    const [[venta]] = await connection.query(
+      `
+      SELECT
+        v.id_venta,
+        v.id_local,
+        v.numero_comprobante,
+        v.estado,
+        v.total,
+        COALESCE((
+          SELECT sd.estado
+          FROM sri_documentos sd
+          WHERE sd.id_venta = v.id_venta
+            AND sd.tipo_comprobante = 'FACTURA'
+          ORDER BY sd.id_documento_sri DESC
+          LIMIT 1
+        ), 'SIN_DOCUMENTO') AS estado_documento_sri
+      FROM ventas v
+      WHERE v.id_venta = ?
+        AND v.id_local = ?
+      LIMIT 1
+      FOR UPDATE
+      `,
+      [idVenta, idLocal]
+    );
+
+    if (!venta) {
+      throw createHttpError("Venta no encontrada", 404);
+    }
+
+    if (venta.estado === "ANULADA") {
+      throw createHttpError("La venta ya fue anulada anteriormente", 409);
+    }
+
+    if (venta.estado !== "PAGADA") {
+      throw createHttpError("Solo se pueden anular ventas en estado PAGADA", 409);
+    }
+
+    if (venta.estado_documento_sri === "AUTORIZADO") {
+      throw createHttpError(
+        "Esta venta ya tiene un documento SRI autorizado. Debes gestionarla con una nota de credito.",
+        409
+      );
+    }
+
+    const [detalle] = await connection.query(
+      `
+      SELECT
+        id_detalle,
+        id_producto,
+        cantidad,
+        imei
+      FROM detalle_venta
+      WHERE id_venta = ?
+      ORDER BY id_detalle ASC
+      `,
+      [idVenta]
+    );
+
+    if (!detalle.length) {
+      throw createHttpError("La venta no tiene detalle para restaurar inventario", 409);
+    }
+
+    const referencia = `ANULACION-VENTA-${idVenta}`;
+
+    for (const item of detalle) {
+      const cantidad = Number(item.cantidad || 0);
+      const stock = await asegurarStockProductoVenta(
+        connection,
+        item.id_producto,
+        idLocal
+      );
+      const stockNuevo = stock.stock_actual + cantidad;
+
+      await connection.query(
+        `
+        UPDATE inventario_stock
+        SET stock_actual = ?,
+            fecha_actualizacion = CURRENT_TIMESTAMP
+        WHERE id_stock = ?
+        `,
+        [stockNuevo, stock.id_stock]
+      );
+
+      if (item.imei) {
+        const imei = String(item.imei).trim();
+        const [[imeiRow]] = await connection.query(
+          `
+          SELECT id_imei, estado
+          FROM inventario_imei
+          WHERE id_producto = ?
+            AND id_local = ?
+            AND (imei1 = ? OR imei2 = ?)
+          LIMIT 1
+          FOR UPDATE
+          `,
+          [item.id_producto, idLocal, imei, imei]
+        );
+
+        if (!imeiRow) {
+          throw createHttpError(
+            `No se encontro el IMEI ${imei} para restaurarlo al inventario`,
+            409
+          );
+        }
+
+        if (String(imeiRow.estado || "").toLowerCase() !== "vendido") {
+          throw createHttpError(
+            `El IMEI ${imei} ya no esta en estado vendido y no se puede revertir automaticamente`,
+            409
+          );
+        }
+
+        await connection.query(
+          `
+          UPDATE inventario_imei
+          SET estado = 'disponible'
+          WHERE id_imei = ?
+          `,
+          [imeiRow.id_imei]
+        );
+      }
+
+      await connection.query(
+        `
+        INSERT INTO movimientos_stock (
+          id_producto,
+          id_local,
+          id_usuario,
+          tipo,
+          motivo,
+          cantidad,
+          stock_anterior,
+          stock_nuevo,
+          referencia
+        ) VALUES (?, ?, ?, 'ENTRADA', 'AJUSTE', ?, ?, ?, ?)
+        `,
+        [
+          item.id_producto,
+          idLocal,
+          idUsuario,
+          cantidad,
+          stock.stock_actual,
+          stockNuevo,
+          referencia
+        ]
+      );
+    }
+
+    const fechaAnulacion = getCurrentDateTimeEcSql();
+
+    await connection.query(
+      `
+      UPDATE ventas
+      SET estado = 'ANULADA',
+          motivo_anulacion = ?,
+          fecha_anulacion = ?,
+          id_usuario_anulacion = ?
+      WHERE id_venta = ?
+        AND id_local = ?
+      `,
+      [motivo, fechaAnulacion, idUsuario, idVenta, idLocal]
+    );
+
+    await connection.commit();
+    transactionStarted = false;
+
+    const ventaActualizada = await fetchVentaAdminDetalle(connection, idVenta, idLocal);
+
+    res.json({
+      ok: true,
+      mensaje: "Venta anulada correctamente y el inventario fue restaurado",
+      venta: ventaActualizada
+    });
+  } catch (error) {
+    if (transactionStarted) {
+      await connection.rollback();
+    }
+
+    console.error("❌ anularVentaAdmin:", error);
+    res.status(error.statusCode || 500).json({
+      ok: false,
+      mensaje: error.message || "Error al anular la venta"
     });
   } finally {
     connection.release();

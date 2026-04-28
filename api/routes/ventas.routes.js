@@ -8,6 +8,12 @@ const { auth } = require("../middlewares/auth.middleware");
    🧾 VENTAS (SOLO CAJA)
 ===================================================== */
 
+router.get(
+  "/",
+  auth(["ADMIN"]),
+  ventasCtrl.listarVentasAdmin
+);
+
 // ➕ Crear venta
 router.post(
   "/",
@@ -19,6 +25,18 @@ router.get(
   "/buscar",
   auth(["CAJA"]),
   ventasCtrl.buscarProductoPOS
+);
+
+router.get(
+  "/:id",
+  auth(["ADMIN"]),
+  ventasCtrl.obtenerDetalleVentaAdmin
+);
+
+router.post(
+  "/:id/anular",
+  auth(["ADMIN"]),
+  ventasCtrl.anularVentaAdmin
 );
 
 router.post(

@@ -58,6 +58,10 @@ Route::get('/admin/caja', function () {
     return view('admin.caja');
 });
 
+Route::get('/admin/ventas/anulaciones', function () {
+    return view('admin.ventas-anulaciones');
+});
+
 Route::get('/admin/contabilidad', function () {
     return view('admin.contabilidad');
 });
