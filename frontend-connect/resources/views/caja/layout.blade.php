@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@yield('title') · Super Admin</title>
+<title>@yield('title') · Caja</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
-    --sidebar-width:288px;
-    --shell-bg:#0b0f19;
-    --sidebar-bg:#06080f;
-    --surface:#111827;
+    --sidebar-width:260px;
+    --shell-bg:#050b18;
+    --sidebar-bg:#020617;
+    --surface:#0f172a;
     --surface-border:rgba(255,255,255,0.07);
     --text-main:#ffffff;
     --text-soft:#cbd5e1;
@@ -35,8 +35,8 @@ body{
 body{
     font-family:'Inter',sans-serif;
     background:
-        radial-gradient(circle at top, rgba(29,78,216,.20), transparent 34%),
-        linear-gradient(180deg, #0b0f19 0%, #06080f 100%);
+        radial-gradient(circle at top, rgba(37,99,235,.22), transparent 35%),
+        linear-gradient(180deg, #050b18 0%, #020617 100%);
     color:var(--text-main);
 }
 
@@ -61,7 +61,7 @@ a{
     color:inherit;
 }
 
-.layout{
+.app-shell{
     min-height:100vh;
 }
 
@@ -85,10 +85,9 @@ body.sidebar-open .sidebar-overlay{
     position:fixed;
     inset:0 auto 0 0;
     width:min(86vw, 300px);
-    background:rgba(6,8,15,.98);
-    min-height:100vh;
     padding:18px 16px 24px;
-    border-right:1px solid rgba(255,255,255,0.05);
+    background:rgba(2,6,23,.98);
+    border-right:1px solid rgba(255,255,255,.06);
     transform:translateX(-100%);
     transition:transform .25s ease;
     z-index:40;
@@ -107,47 +106,22 @@ body.sidebar-open .sidebar{
     align-items:center;
     justify-content:space-between;
     gap:12px;
-    margin-bottom:24px;
+    margin-bottom:22px;
 }
 
 .logo{
+    background:#fff;
+    border-radius:14px;
+    padding:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:64px;
     flex:1;
-    text-align:center;
 }
 
 .logo img{
     width:136px;
-    margin:0 auto;
-    background:#fff;
-    padding:8px;
-    border-radius:12px;
-}
-
-.sidebar-role{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    margin:0 0 18px;
-    padding:12px 14px;
-    border-radius:14px;
-    background:linear-gradient(180deg, rgba(29,78,216,.18), rgba(15,23,42,.46));
-    border:1px solid rgba(96,165,250,.18);
-    box-shadow:0 16px 34px rgba(2,6,23,.24);
-}
-
-.sidebar-role span{
-    font-size:11px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:#93c5fd;
-    font-weight:800;
-}
-
-.sidebar-role strong{
-    font-size:16px;
-    color:#fff;
-    font-weight:800;
-    line-height:1.2;
 }
 
 .sidebar-close{
@@ -162,29 +136,32 @@ body.sidebar-open .sidebar{
     flex-shrink:0;
 }
 
-.sidebar-close svg,
-.menu-toggle svg{
-    width:22px;
-    height:22px;
+.menu{
+    flex:1;
 }
 
 .menu a{
     display:flex;
     align-items:center;
     gap:10px;
-    color:#aaa;
     padding:12px 14px;
     border-radius:12px;
-    margin-bottom:8px;
+    color:var(--text-soft);
     text-decoration:none;
+    margin-bottom:8px;
     transition:background .2s ease, color .2s ease, transform .2s ease;
 }
 
-.menu a:hover,
-.menu a.active{
-    background:#111827;
+.menu a:hover{
+    background:#0f172a;
     color:#fff;
     transform:translateX(2px);
+}
+
+.menu .active{
+    background:#0f172a;
+    color:#fff;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
 }
 
 .sidebar-footer{
@@ -193,11 +170,15 @@ body.sidebar-open .sidebar{
     border-top:1px solid rgba(255,255,255,.08);
 }
 
-.sidebar-footer .btn-logout{
+.btn-logout{
+    background:#111827;
+    border:1px solid rgba(255,255,255,.08);
+    padding:11px 16px;
+    border-radius:12px;
+    color:#fff;
+    cursor:pointer;
+    font-weight:700;
     width:100%;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
 }
 
 .content{
@@ -240,24 +221,20 @@ body.sidebar-open .sidebar{
     flex-shrink:0;
 }
 
-.topbar-copy{
-    min-width:0;
+.menu-toggle svg,
+.sidebar-close svg{
+    width:22px;
+    height:22px;
 }
 
 .topbar-label{
-    display:inline-flex;
-    align-items:center;
-    padding:7px 12px;
-    border-radius:999px;
-    background:rgba(59,130,246,.12);
-    border:1px solid rgba(96,165,250,.22);
-    color:#dbeafe;
+    display:block;
+    color:var(--text-muted);
     font-size:11px;
-    font-weight:800;
-    letter-spacing:.1em;
+    font-weight:700;
+    letter-spacing:.08em;
     text-transform:uppercase;
-    margin-bottom:10px;
-    box-shadow:0 10px 24px rgba(15,23,42,.16);
+    margin-bottom:4px;
 }
 
 .topbar h1{
@@ -270,97 +247,39 @@ body.sidebar-open .sidebar{
     display:flex;
     align-items:center;
     gap:12px;
-    flex-wrap:wrap;
     justify-content:flex-end;
-}
-
-.btn-logout{
-    background:#111;
-    border:1px solid rgba(255,255,255,.08);
-    padding:11px 16px;
-    border-radius:12px;
-    color:#fff;
-    cursor:pointer;
-    font-weight:700;
-}
-
-.cards{
-    display:grid;
-    grid-template-columns:repeat(4, minmax(0, 1fr));
-    gap:20px;
-}
-
-.card{
-    background:#111827;
-    padding:20px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.05);
-    min-width:0;
-}
-
-.card h4{
-    color:#aaa;
-    font-size:14px;
-    margin:0;
-}
-
-.card p{
-    font-size:clamp(24px, 3vw, 30px);
-    font-weight:800;
-    margin:10px 0 0;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.box{
-    background:#111827;
-    padding:20px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.05);
-    min-width:0;
+    flex-wrap:wrap;
 }
 
 .page-wrap,
-.panel-card,
+.caja-page,
+.pos-page,
 .hero-card,
-.detail-card,
+.panel-card,
+.kpi-card,
+.panel-pos,
+.summary-card,
 .table-wrap,
 .table-wrap-pro,
-.table-responsive,
-.modal-card,
 .stats-grid,
-.filter-grid,
-.actions,
-.actions-inline,
-.header-actions,
-.toolbar,
-.two-col,
-.form-grid,
-.detail-grid,
-.mini-grid,
-.chart-row,
 .panel-grid,
 .field-grid,
+.pos-grid,
 .grid-2,
 .payment-grid,
 .payment-layout,
 .preview-grid-2,
 .preview-body,
+.actions-grid,
+.actions-stack,
 .search-row,
 .btn-row,
-.preview-foot-actions,
-.table-scroll-actions{
+.preview-foot-actions{
     min-width:0;
 }
 
 .table-wrap,
-.table-wrap-pro,
-.table-responsive{
+.table-wrap-pro{
     max-width:100%;
     overflow-x:auto;
     overflow-y:hidden;
@@ -371,28 +290,24 @@ body.sidebar-open .sidebar{
 }
 
 .table-wrap::-webkit-scrollbar,
-.table-wrap-pro::-webkit-scrollbar,
-.table-responsive::-webkit-scrollbar{
+.table-wrap-pro::-webkit-scrollbar{
     height:11px;
 }
 
 .table-wrap::-webkit-scrollbar-track,
-.table-wrap-pro::-webkit-scrollbar-track,
-.table-responsive::-webkit-scrollbar-track{
+.table-wrap-pro::-webkit-scrollbar-track{
     background:rgba(15,23,42,.72);
 }
 
 .table-wrap::-webkit-scrollbar-thumb,
-.table-wrap-pro::-webkit-scrollbar-thumb,
-.table-responsive::-webkit-scrollbar-thumb{
+.table-wrap-pro::-webkit-scrollbar-thumb{
     background:rgba(59,130,246,.58);
     border-radius:999px;
     border:2px solid rgba(15,23,42,.72);
 }
 
 .table-wrap table,
-.table-wrap-pro table,
-.table-responsive table{
+.table-wrap-pro table{
     width:max-content;
     min-width:100%;
 }
@@ -408,10 +323,6 @@ body.sidebar-open .sidebar{
 }
 
 @media (min-width: 992px){
-    body{
-        overflow-y:auto;
-    }
-
     .sidebar-overlay,
     .sidebar-close,
     .menu-toggle{
@@ -432,24 +343,18 @@ body.sidebar-open .sidebar{
     }
 }
 
-@media (max-width: 1199.98px){
-    .cards{
-        grid-template-columns:repeat(2, minmax(0, 1fr));
+@media (max-width: 1180px){
+    .content .pos-grid,
+    .content .panel-grid,
+    .content .payment-layout,
+    .content .preview-body{
+        grid-template-columns:1fr !important;
     }
 
-    .grid,
     .content .stats-grid,
-    .content .filter-grid,
-    .content .detail-grid,
-    .content .two-col,
-    .content .form-grid,
-    .content .mini-grid,
-    .content .chart-row,
-    .content .panel-grid,
     .content .field-grid,
-    .content .payment-grid,
-    .content .payment-layout,
     .content .grid-2,
+    .content .payment-grid,
     .content .preview-grid-2{
         grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
     }
@@ -464,85 +369,37 @@ body.sidebar-open .sidebar{
     .topbar-actions{
         width:100%;
     }
-
-    .btn-logout{
-        width:100%;
-    }
 }
 
 @media (max-width: 767.98px){
-    .cards,
-    .grid,
     .content .stats-grid,
-    .content .filter-grid,
-    .content .detail-grid,
-    .content .two-col,
-    .content .form-grid,
-    .content .mini-grid,
-    .content .chart-row,
-    .content .panel-grid,
     .content .field-grid,
-    .content .payment-grid,
-    .content .payment-layout,
     .content .grid-2,
-    .content .preview-grid-2{
+    .content .payment-grid,
+    .content .preview-grid-2,
+    .content .actions-grid{
         grid-template-columns:1fr !important;
     }
 
-    .content .panel-card,
-    .content .hero-card,
-    .content .detail-card,
-    .content .box,
-    .content .card{
-        padding:18px !important;
-        border-radius:18px;
-    }
-
-    .content .panel-header,
-    .content .detail-header,
-    .content .toolbar,
-    .content .header-actions,
-    .content .filter-actions,
-    .content .actions,
-    .content .actions-inline,
-    .content .modal-actions,
-    .content .detail-actions,
-    .content .pagination-bar,
-    .content .meta-chips,
-    .content .btn-row,
-    .content .preview-foot-actions,
-    .content .table-scroll-actions{
-        width:100%;
+    .content .search-row,
+    .content .preview-head,
+    .content .preview-foot,
+    .content .preview-foot-actions{
         display:flex;
         flex-direction:column;
         align-items:stretch;
+        gap:12px;
     }
 
-    .content .toolbar > *,
-    .content .header-actions > *,
-    .content .filter-actions > *,
-    .content .actions > *,
-    .content .actions-inline > *,
-    .content .modal-actions > *,
-    .content .detail-actions > *,
-    .content .pagination-bar > *,
-    .content .meta-chips > *,
-    .content .btn-row > *,
-    .content .preview-foot-actions > *,
-    .content .table-scroll-actions > *{
+    .content .search-row > *,
+    .content .preview-head > *,
+    .content .preview-foot > *,
+    .content .preview-foot-actions > *{
         width:100%;
-    }
-
-    .content .field input,
-    .content .field select,
-    .content .field textarea{
-        width:100%;
-        min-width:0;
     }
 
     .table-wrap table,
-    .table-wrap-pro table,
-    .table-responsive table{
+    .table-wrap-pro table{
         min-width:720px;
     }
 
@@ -555,6 +412,10 @@ body.sidebar-open .sidebar{
         padding:16px 14px 20px;
     }
 
+    .logo{
+        min-height:58px;
+    }
+
     .logo img{
         width:120px;
     }
@@ -563,16 +424,15 @@ body.sidebar-open .sidebar{
         font-size:24px;
     }
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="layout">
+<div class="app-shell">
     <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-    <aside class="sidebar" id="superadminSidebar">
+    <aside class="sidebar">
         <div class="sidebar-top">
             <div class="logo">
                 <img src="{{ asset('images/connect.png') }}" alt="Connect">
@@ -585,18 +445,9 @@ body.sidebar-open .sidebar{
             </button>
         </div>
 
-        <div class="sidebar-role">
-            <span>Rol activo</span>
-            <strong>Super Admin</strong>
-        </div>
-
         <nav class="menu">
-            <a href="/superadmin" class="{{ request()->is('superadmin') ? 'active' : '' }}">📊 Dashboard</a>
-            <a href="/superadmin/locales" class="{{ request()->is('superadmin/locales') ? 'active' : '' }}">🏬 Locales</a>
-            <a href="/superadmin/admins" class="{{ request()->is('superadmin/admins') ? 'active' : '' }}">👨‍💼 Administradores</a>
-            <a href="/superadmin/reportes" class="{{ request()->is('superadmin/reportes') ? 'active' : '' }}">📈 Reportes</a>
-            <a href="/superadmin/rides" class="{{ request()->is('superadmin/rides') ? 'active' : '' }}">🧾 RIDE SRI</a>
-            <a href="/superadmin/notas-credito" class="{{ request()->is('superadmin/notas-credito') ? 'active' : '' }}">↩️ Notas de credito</a>
+            <a href="/caja" class="{{ request()->is('caja') && !request()->is('caja/pos') ? 'active' : '' }}">💰 Caja</a>
+            <a href="/caja/pos" class="{{ request()->is('caja/pos') ? 'active' : '' }}">🛒 Punto de venta</a>
         </nav>
 
         <div class="sidebar-footer">
@@ -613,8 +464,8 @@ body.sidebar-open .sidebar{
                     </svg>
                 </button>
 
-                <div class="topbar-copy">
-                    <span class="topbar-label">Rol Super Admin</span>
+                <div>
+                    <span class="topbar-label">Rol Caja</span>
                     <h1>@yield('title')</h1>
                 </div>
             </div>
@@ -644,8 +495,25 @@ function closeSidebar(){
 document.addEventListener("DOMContentLoaded", ()=>{
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const roles = Array.isArray(user.roles) ? user.roles : [];
+    const isCaja = roles.includes("CAJA");
 
-    if(!token || !user.roles || !user.roles.includes("SUPER_ADMIN")){
+    if(!token || roles.length === 0){
+        window.location.href = "/login";
+        return;
+    }
+
+    if(!isCaja){
+        if(roles.includes("ADMIN")){
+            window.location.href = "/admin";
+            return;
+        }
+
+        if(roles.includes("SUPER_ADMIN")){
+            window.location.href = "/superadmin";
+            return;
+        }
+
         window.location.href = "/login";
         return;
     }
@@ -672,8 +540,7 @@ window.addEventListener("keydown", (event)=>{
 });
 
 function logout(){
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+    localStorage.clear();
     window.location.href = "/login";
 }
 </script>

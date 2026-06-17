@@ -325,7 +325,7 @@
         }
     }
 
-    @media (max-width: 760px){
+    @media (max-width: 767.98px){
         .filter-grid,
         .stats-grid,
         .two-col{

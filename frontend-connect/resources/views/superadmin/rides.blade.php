@@ -45,7 +45,7 @@
 
     .stats-grid{
         display:grid;
-        grid-template-columns:repeat(5, minmax(0, 1fr));
+        grid-template-columns:repeat(5, minmax(180px, 1fr));
         gap:16px;
     }
 
@@ -78,9 +78,13 @@
 
     .filter-grid{
         display:grid;
-        grid-template-columns:repeat(6, minmax(0, 1fr));
+        grid-template-columns:minmax(280px, 1.7fr) repeat(3, minmax(170px, .95fr)) repeat(2, minmax(150px, .8fr));
         gap:14px;
         align-items:end;
+    }
+
+    .filter-grid .field:first-child{
+        grid-column:span 2;
     }
 
     .field{
@@ -161,12 +165,14 @@
         border-radius:16px;
         border:1px solid rgba(255,255,255,.05);
         background:rgba(255,255,255,.015);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
     }
 
     .table-rides{
         width:100%;
-        min-width:1320px;
+        min-width:1140px;
         border-collapse:collapse;
+        table-layout:fixed;
     }
 
     .table-rides thead th{
@@ -179,13 +185,63 @@
         border-bottom:1px solid rgba(255,255,255,.06);
         text-transform:uppercase;
         letter-spacing:.04em;
+        white-space:nowrap;
     }
 
     .table-rides tbody td{
-        padding:16px 18px;
+        padding:18px 20px;
         color:#e5e7eb;
         border-bottom:1px solid rgba(255,255,255,.05);
         vertical-align:top;
+    }
+
+    .table-rides th:nth-child(1),
+    .table-rides td:nth-child(1){
+        width:13%;
+    }
+
+    .table-rides th:nth-child(2),
+    .table-rides td:nth-child(2){
+        width:21%;
+    }
+
+    .table-rides th:nth-child(3),
+    .table-rides td:nth-child(3){
+        width:16%;
+    }
+
+    .table-rides th:nth-child(4),
+    .table-rides td:nth-child(4){
+        width:21%;
+    }
+
+    .table-rides th:nth-child(5),
+    .table-rides td:nth-child(5){
+        width:8%;
+    }
+
+    .table-rides th:nth-child(6),
+    .table-rides td:nth-child(6){
+        width:10%;
+    }
+
+    .table-rides th:nth-child(7),
+    .table-rides td:nth-child(7){
+        width:5%;
+    }
+
+    .table-rides th:nth-child(8),
+    .table-rides td:nth-child(8){
+        width:6%;
+    }
+
+    .table-rides th:last-child,
+    .table-rides td:last-child{
+        position:sticky;
+        right:0;
+        z-index:2;
+        background:#0b1426;
+        box-shadow:-18px 0 24px rgba(5,11,24,.45);
     }
 
     .table-rides tbody tr:hover{
@@ -201,6 +257,7 @@
     .strong{
         color:#fff;
         font-weight:800;
+        line-height:1.3;
     }
 
     .muted{
@@ -214,7 +271,14 @@
         font-family:"Courier New", monospace;
         color:#e2e8f0;
         font-size:12px;
-        word-break:break-all;
+        line-height:1.55;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+    }
+
+    .cell-stack{
+        display:grid;
+        gap:6px;
     }
 
     .badge{
@@ -254,8 +318,9 @@
 
     .actions{
         display:flex;
+        flex-direction:column;
         gap:8px;
-        flex-wrap:wrap;
+        min-width:112px;
     }
 
     .btn-link{
@@ -269,6 +334,10 @@
         font-weight:800;
         background:linear-gradient(135deg, #f4c842 0%, #d8a910 100%);
         color:#111827;
+        width:100%;
+        box-sizing:border-box;
+        min-height:40px;
+        text-align:center;
     }
 
     .btn-link.alt{
@@ -291,12 +360,20 @@
         .filter-grid{
             grid-template-columns:repeat(3, minmax(0, 1fr));
         }
+
+        .filter-grid .field:first-child{
+            grid-column:span 3;
+        }
     }
 
-    @media (max-width: 768px){
+    @media (max-width: 767.98px){
         .stats-grid,
         .filter-grid{
             grid-template-columns:1fr;
+        }
+
+        .filter-grid .field:first-child{
+            grid-column:auto;
         }
     }
 </style>
@@ -587,30 +664,40 @@ function renderTabla(items = []) {
         return `
             <tr>
                 <td>
-                    <div class="strong">${escapeHtml(safeText(item.nombre_local))}</div>
-                    <div class="muted">Local #${item.id_local}</div>
+                    <div class="cell-stack">
+                        <div class="strong">${escapeHtml(safeText(item.nombre_local))}</div>
+                        <div class="muted">Local #${item.id_local}</div>
+                    </div>
                 </td>
                 <td>
-                    <div class="strong">${escapeHtml(safeText(item.numero_comprobante, "Sin número"))}</div>
-                    <div class="muted">Venta #${item.id_venta}</div>
-                    <div class="mono">${escapeHtml(safeText(item.clave_acceso, "Sin clave"))}</div>
+                    <div class="cell-stack">
+                        <div class="strong">${escapeHtml(safeText(item.numero_comprobante, "Sin número"))}</div>
+                        <div class="muted">Venta #${item.id_venta}</div>
+                        <div class="mono">${escapeHtml(safeText(item.clave_acceso, "Sin clave"))}</div>
+                    </div>
                 </td>
                 <td>
-                    <div class="strong">${escapeHtml(safeText(item.cliente_nombres, "CONSUMIDOR FINAL"))}</div>
-                    <div class="muted">${escapeHtml(safeText(item.cliente_cedula, "Sin identificación"))}</div>
-                    <div class="muted">${escapeHtml(safeText(item.cliente_correo, "Sin correo"))}</div>
+                    <div class="cell-stack">
+                        <div class="strong">${escapeHtml(safeText(item.cliente_nombres, "CONSUMIDOR FINAL"))}</div>
+                        <div class="muted">${escapeHtml(safeText(item.cliente_cedula, "Sin identificación"))}</div>
+                        <div class="muted">${escapeHtml(safeText(item.cliente_correo, "Sin correo"))}</div>
+                    </div>
                 </td>
                 <td>
-                    <div class="mono">${escapeHtml(safeText(item.numero_autorizacion, "Sin autorización"))}</div>
-                    <div class="muted">Autorizado: ${escapeHtml(formatDateTime(item.fecha_autorizacion))}</div>
-                    <div class="muted">Venta: ${escapeHtml(formatDateTime(item.fecha_venta))}</div>
+                    <div class="cell-stack">
+                        <div class="mono">${escapeHtml(safeText(item.numero_autorizacion, "Sin autorización"))}</div>
+                        <div class="muted">Autorizado: ${escapeHtml(formatDateTime(item.fecha_autorizacion))}</div>
+                        <div class="muted">Venta: ${escapeHtml(formatDateTime(item.fecha_venta))}</div>
+                    </div>
                 </td>
                 <td>
                     <span class="${getBadgeClass(item.ambiente, "ambiente")}">${escapeHtml(safeText(item.ambiente))}</span>
                 </td>
                 <td>
-                    <span class="${getBadgeClass(item.estado)}">${escapeHtml(safeText(item.estado))}</span>
-                    <div class="muted">Venta SRI: ${escapeHtml(safeText(item.estado_sri, "N/A"))}</div>
+                    <div class="cell-stack">
+                        <span class="${getBadgeClass(item.estado)}">${escapeHtml(safeText(item.estado))}</span>
+                        <div class="muted">Venta SRI: ${escapeHtml(safeText(item.estado_sri, "N/A"))}</div>
+                    </div>
                 </td>
                 <td>
                     <div class="strong">$${escapeHtml(formatMoney(item.total))}</div>

@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const db = require("../db/db");
+const { buildProductSearchClause } = require("../services/product-search.service");
 const UPLOADS_ROOT = path.resolve(__dirname, "../uploads");
 
 function fechaActualEcuador() {
@@ -143,12 +144,12 @@ async function getStockReportData({
   }
 
   if (buscar) {
-    where += ` AND (
-      p.nombre_producto LIKE ?
-      OR p.codigo_barras LIKE ?
-      OR p.sku LIKE ?
-    ) `;
-    params.push(`%${buscar}%`, `%${buscar}%`, `%${buscar}%`);
+    const searchClause = buildProductSearchClause("p", buscar);
+
+    if (searchClause) {
+      where += ` AND ${searchClause.sql} `;
+      params.push(...searchClause.params);
+    }
   }
 
   if (solo_stock_bajo) {

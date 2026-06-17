@@ -318,7 +318,7 @@
         border: 1px solid rgba(34,197,94,.18);
     }
 
-    @media (max-width: 900px){
+    @media (max-width: 767.98px){
         .stats-grid{
             grid-template-columns: 1fr;
         }

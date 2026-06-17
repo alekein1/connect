@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::view('/', 'welcome')->name('home');
+Route::view('/login', 'auth.login')->name('login');
+Route::get('/caja', function () {
+    return view('caja.index');
 });
-Route::get('/login', function () {
-    return view('auth.login');
+Route::get('/caja/pos', function () {
+    return view('caja.pos');
 });
 
 
@@ -28,6 +30,10 @@ Route::get('/superadmin/reportes', function () {
 
 Route::get('/superadmin/rides', function () {
     return view('superadmin.rides');
+});
+
+Route::get('/superadmin/notas-credito', function () {
+    return view('superadmin.notas-credito');
 });
 
 Route::get('/admin', function () {
@@ -57,6 +63,8 @@ Route::get('/admin/inventario', function () {
 Route::get('/admin/caja', function () {
     return view('admin.caja');
 });
+
+Route::redirect('/admin/ventas/pos', '/caja/pos');
 
 Route::get('/admin/ventas/anulaciones', function () {
     return view('admin.ventas-anulaciones');

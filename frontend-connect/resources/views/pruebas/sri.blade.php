@@ -274,6 +274,32 @@
                 min-height:420px;
             }
         }
+
+        @media (max-width: 640px){
+            .shell{
+                width:min(1100px, calc(100% - 20px));
+                margin:18px auto;
+            }
+
+            .hero,
+            .card{
+                padding:20px;
+                border-radius:20px;
+            }
+
+            .actions{
+                flex-direction:column;
+            }
+
+            .btn{
+                width:100%;
+            }
+
+            .viewer{
+                min-height:auto;
+                padding:16px;
+            }
+        }
     </style>
 </head>
 <body>

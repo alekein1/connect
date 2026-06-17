@@ -26,6 +26,7 @@ const contabilidadRoutes = require("./routes/contabilidad.routes");
 const gastosRoutes = require("./routes/gastos.routes");
 const sriRoutes = require("./routes/sri.routes");
 const reportesRoutes = require("./routes/reportes.routes");
+const notasCreditoRoutes = require("./routes/notasCredito.routes");
 
 
 
@@ -53,6 +54,7 @@ app.use("/api/contabilidad", contabilidadRoutes);
 app.use("/api/gastos", gastosRoutes);
 app.use("/api/sri", sriRoutes);
 app.use("/api/reportes", reportesRoutes);
+app.use("/api/notas-credito", notasCreditoRoutes);
 
 const server = app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

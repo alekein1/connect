@@ -34,6 +34,12 @@ router.put(
   inventarioCtrl.ajustarStock
 );
 
+router.post(
+  "/:id_producto/imei/:id_imei/eliminar",
+  auth(["ADMIN"]),
+  inventarioCtrl.eliminarImei
+);
+
 router.post("/:id_producto/imei", auth(["ADMIN"]), inventarioCtrl.ingresarPorIMEI);
 router.post("/:id_producto/traspasar", auth(["ADMIN"]), inventarioCtrl.traspasarProducto);
 

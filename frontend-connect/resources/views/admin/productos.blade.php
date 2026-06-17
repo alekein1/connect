@@ -21,11 +21,16 @@
 
     .panel-header{
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
         gap: 16px;
         margin-bottom: 22px;
-        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .panel-header-copy{
+        width: 100%;
     }
 
     .panel-title{
@@ -45,12 +50,18 @@
         display:flex;
         align-items:center;
         gap:12px;
-        flex-wrap:wrap;
+        min-width:0;
+        width:min(100%, 560px);
+        margin:0 auto;
+        justify-content:center;
+        flex-wrap:nowrap;
     }
 
     .search-products{
-        width:260px;
-        max-width:100%;
+        flex:1 1 320px;
+        width:100%;
+        min-width:260px;
+        max-width:none;
         border: 1px solid rgba(255,255,255,0.10);
         background: #0f172a;
         color: #fff;
@@ -74,11 +85,17 @@
         background: linear-gradient(135deg, #f4c842 0%, #d8a910 100%);
         color: #111827;
         font-weight: 800;
-        padding: 12px 18px;
+        padding: 11px 16px;
         border-radius: 12px;
         cursor: pointer;
         transition: .2s ease;
         box-shadow: 0 10px 20px rgba(216,169,16,.20);
+        white-space: nowrap;
+        flex:0 0 auto;
+        min-width:165px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
     }
 
     .btn-primary-pro:hover{
@@ -145,6 +162,22 @@
     .local-name{
         font-weight: 700;
         color: #fff;
+    }
+
+    .product-copy{
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+    }
+
+    .product-title{
+        color:#fff;
+        font-weight:700;
+    }
+
+    .product-meta{
+        color:#94a3b8;
+        font-size:12px;
     }
 
     .badge-state{
@@ -243,20 +276,18 @@
         display: flex;
     }
 
-    .modal-card{
-    width: 100%;
-    max-width: 420px; /* 👈 MÁS COMPACTO */
-    max-height: 90vh; /* 👈 NO SE SALE DE LA PANTALLA */
-    
-    display: flex;
-    flex-direction: column;
-
-    background: linear-gradient(180deg, #0b1220 0%, #09111d 100%);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    box-shadow: 0 25px 70px rgba(0,0,0,.45);
-    overflow: hidden;
-}
+    .modal-pro .modal-card{
+        width:min(100%, 680px);
+        max-width:680px;
+        max-height:90vh;
+        display:flex;
+        flex-direction:column;
+        background:linear-gradient(180deg, #0b1220 0%, #09111d 100%);
+        border:1px solid rgba(255,255,255,0.08);
+        border-radius:20px;
+        box-shadow:0 25px 70px rgba(0,0,0,.45);
+        overflow:hidden;
+    }
 
     .modal-head{
         display: flex;
@@ -444,9 +475,34 @@
     color: #fff;
 }
 
-    @media (max-width: 900px){
+    @media (max-width: 767.98px){
         .stats-grid{
             grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 1360px){
+        .header-actions{
+            width:100%;
+            max-width:520px;
+            flex-wrap:wrap;
+        }
+
+        .btn-primary-pro{
+            min-width:0;
+        }
+    }
+
+    @media (max-width: 767.98px){
+        .header-actions{
+            flex-direction:column;
+            align-items:stretch;
+        }
+
+        .search-products,
+        .btn-primary-pro{
+            width:100%;
+            min-width:0;
         }
     }
 
@@ -522,7 +578,7 @@
 
 @media (max-width: 500px){
 
-    .modal-card{
+    .modal-pro .modal-card{
         max-width: 95%;
         max-height: 92vh;
     }
@@ -560,20 +616,20 @@
     <div class="panel-card">
 
         <div class="panel-header">
-            <div>
+            <div class="panel-header-copy">
                 <h3 class="panel-title">Gestión de Productos</h3>
                 <p class="panel-subtitle">Inventario de tu local</p>
             </div>
             <div class="header-actions">
+                <button class="btn-primary-pro" onclick="abrirModal()">
+                    + Nuevo Producto
+                </button>
                 <input
                     type="text"
                     id="buscarProducto"
                     class="search-products"
-                    placeholder="Buscar producto..."
+                    placeholder="Buscar por nombre, marca, capacidad o codigo..."
                 >
-                <button class="btn-primary-pro" onclick="abrirModal()">
-                    + Nuevo Producto
-                </button>
             </div>
         </div>
 
@@ -715,6 +771,45 @@ let paginaActual = 1;
 let totalPaginas = 1;
 const limiteProductos = 20;
 
+function limpiarTextoProducto(valor = ""){
+    const texto = String(valor ?? "").trim();
+    return texto && texto.toUpperCase() !== "N/A" ? texto : "";
+}
+
+function obtenerMetaProducto(producto = {}){
+    return [
+        limpiarTextoProducto(producto.capacidad),
+        limpiarTextoProducto(producto.color),
+        limpiarTextoProducto(producto.estado)
+    ].filter(Boolean);
+}
+
+function formatearProducto(producto = {}){
+    const nombre = limpiarTextoProducto(producto.nombre_producto) || "Producto";
+    const detalle = [
+        limpiarTextoProducto(producto.marca),
+        ...obtenerMetaProducto(producto)
+    ].filter(Boolean).join(" | ");
+
+    return detalle ? `${nombre} | ${detalle}` : nombre;
+}
+
+function renderProductoHtml(producto = {}){
+    const nombre = limpiarTextoProducto(producto.nombre_producto) || "Producto";
+    const detalle = obtenerMetaProducto(producto).join(" | ");
+
+    if(!detalle){
+        return `<span class="product-title">${nombre}</span>`;
+    }
+
+    return `
+        <div class="product-copy">
+            <span class="product-title">${nombre}</span>
+            <span class="product-meta">${detalle}</span>
+        </div>
+    `;
+}
+
 document.addEventListener("DOMContentLoaded", ()=>{
     cargarProductos();
     cargarSubcategorias();
@@ -756,8 +851,8 @@ function renderTabla(data){
   : ''
 }
             </td>
-            <td class="local-name">${p.nombre_producto}</td>
-            <td>${p.marca ?? "N/A"}</td>
+            <td class="local-name">${renderProductoHtml(p)}</td>
+            <td>${limpiarTextoProducto(p.marca) || "N/A"}</td>
             <td>$${p.precio_unitario}</td>
             <td>${p.stock_minimo ?? 0}</td>
             <td>
@@ -768,7 +863,7 @@ function renderTabla(data){
             <td>
                 <button class="btn-action" onclick='editar(${JSON.stringify(p)})'>Editar</button>
                 <button class="btn-action" onclick="etiqueta(${p.id_producto})">Etiqueta</button>
-                <button class="btn-action btn-danger" onclick='eliminarProducto(${p.id_producto}, ${JSON.stringify(p.nombre_producto ?? "")})'>Eliminar</button>
+                <button class="btn-action btn-danger" onclick='eliminarProducto(${p.id_producto}, ${JSON.stringify(formatearProducto(p))})'>Eliminar</button>
             </td>
         </tr>`;
     });

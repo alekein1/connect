@@ -3,6 +3,7 @@ const bwipjs = require("bwip-js");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
+const { buildProductSearchClause } = require("../services/product-search.service");
 
 /* ===============================
    HELPERS
@@ -495,31 +496,14 @@ exports.buscarProductos = async (req, res) => {
       return res.json({ ok: true, data: [] });
     }
 
-    q = q.trim();
-
-    const palabras = q.split(" ");
-
     let where = ` WHERE p.id_local = ? `;
     let params = [id_local];
 
-    // 🔥 CAMBIO: OR GLOBAL (no AND)
-    let condiciones = [];
+    const searchClause = buildProductSearchClause("p", q.trim());
 
-    palabras.forEach(palabra => {
-      const like = `%${palabra}%`;
-
-      condiciones.push(`
-        p.nombre_producto LIKE ?
-        OR p.marca LIKE ?
-        OR p.codigo_barras LIKE ?
-        OR p.sku LIKE ?
-      `);
-
-      params.push(like, like, like, like);
-    });
-
-    if (condiciones.length) {
-      where += ` AND ( ${condiciones.join(" OR ")} )`;
+    if (searchClause) {
+      where += ` AND ${searchClause.sql}`;
+      params.push(...searchClause.params);
     }
 
     const [rows] = await db.query(`

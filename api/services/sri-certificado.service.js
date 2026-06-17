@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
+const API_ROOT = path.resolve(__dirname, "..");
+const SRI_CERTS_DIR = path.join(API_ROOT, "uploads", "sri-certificados");
 
 function createError(message, status = 400) {
   const error = new Error(message);
@@ -84,12 +86,46 @@ function resolveCertificatePath(rawPath) {
     throw createError("Debes enviar un archivo certificado o una ruta_certificado");
   }
 
-  const normalized = path.isAbsolute(rawPath)
-    ? rawPath
-    : path.resolve(__dirname, "..", rawPath);
+  const inputPath = String(rawPath).trim();
+  const fileName = path.basename(inputPath);
+  const pathSegments = inputPath.split(/[\\/]+/).filter(Boolean);
+  const candidates = [];
 
-  if (!fs.existsSync(normalized)) {
-    throw createError("El archivo del certificado no existe en la ruta indicada");
+  const pushCandidate = (candidatePath) => {
+    if (!candidatePath) return;
+    const normalizedCandidate = path.normalize(candidatePath);
+
+    if (!candidates.includes(normalizedCandidate)) {
+      candidates.push(normalizedCandidate);
+    }
+  };
+
+  if (path.isAbsolute(inputPath)) {
+    pushCandidate(inputPath);
+  }
+
+  pushCandidate(path.resolve(API_ROOT, inputPath));
+
+  const uploadsIndex = pathSegments.lastIndexOf("uploads");
+  if (uploadsIndex >= 0 && uploadsIndex < pathSegments.length - 1) {
+    pushCandidate(path.join(API_ROOT, "uploads", ...pathSegments.slice(uploadsIndex + 1)));
+  }
+
+  const apiIndex = pathSegments.lastIndexOf("api");
+  if (apiIndex >= 0 && apiIndex < pathSegments.length - 1) {
+    pushCandidate(path.join(API_ROOT, ...pathSegments.slice(apiIndex + 1)));
+  }
+
+  if (fileName) {
+    pushCandidate(path.join(SRI_CERTS_DIR, fileName));
+  }
+
+  const normalized = candidates.find((candidate) => fs.existsSync(candidate));
+
+  if (!normalized) {
+    throw createError(
+      `El archivo del certificado no existe en la ruta indicada. Ruta guardada: ${inputPath}`
+    );
   }
 
   const ext = path.extname(normalized).toLowerCase();

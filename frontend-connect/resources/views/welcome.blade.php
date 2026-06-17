@@ -592,7 +592,15 @@
 
         @media (max-width: 780px){
             .nav-wrap{
+                flex-direction:column;
+                align-items:stretch;
                 gap:18px;
+            }
+
+            .nav-actions{
+                width:100%;
+                justify-content:space-between;
+                flex-wrap:wrap;
             }
 
             .nav-actions .nav-link{
@@ -614,6 +622,11 @@
         }
 
         @media (max-width: 520px){
+            .nav-actions{
+                flex-direction:column;
+                align-items:stretch;
+            }
+
             .btn{
                 width:100%;
             }
@@ -647,7 +660,7 @@
             <div class="nav-actions">
                 <a href="#funciones" class="nav-link">Funciones</a>
                 <a href="#beneficios" class="nav-link">Beneficios</a>
-                <a href="/login" class="btn btn-primary">Ingresar al sistema</a>
+                <a href="{{ route('login') }}" class="btn btn-primary">Ingresar al sistema</a>
             </div>
         </div>
     </nav>
@@ -674,7 +687,7 @@
                     </p>
 
                     <div class="hero-actions">
-                        <a href="/login" class="btn btn-primary">🚀 Ingresar ahora</a>
+                        <a href="{{ route('login') }}" class="btn btn-primary">🚀 Ingresar ahora</a>
                         <a href="#funciones" class="btn btn-secondary">Ver funciones</a>
                     </div>
 
@@ -888,7 +901,7 @@
                         Una imagen más fuerte genera más confianza, y un sistema mejor estructurado
                         genera una operación más sólida.
                     </p>
-                    <a href="/login" class="btn btn-primary">Ingresar al sistema</a>
+                    <a href="{{ route('login') }}" class="btn btn-primary">Ingresar al sistema</a>
                 </div>
             </div>
         </section>

@@ -1,4 +1,6 @@
+const bcrypt = require("bcryptjs");
 const db = require("../db/db");
+const { buildProductSearchClause } = require("../services/product-search.service");
 
 function normalizarImei(valor = "") {
   return String(valor || "")
@@ -18,6 +20,45 @@ async function buscarImeiExistente(connection, imei) {
   );
 
   return duplicado || null;
+}
+
+function obtenerCodigoVerificacionImei() {
+  return String(
+    process.env.INVENTARIO_IMEI_DELETE_CODE ||
+    process.env.IMEI_DELETE_VERIFICATION_CODE ||
+    "1219"
+  ).trim();
+}
+
+async function validarCodigoEliminacionImei(connection, idUsuario, codigoIngresado) {
+  const codigo = String(codigoIngresado || "").trim();
+
+  if (!codigo || !idUsuario) {
+    return false;
+  }
+
+  const codigoConfigurado = obtenerCodigoVerificacionImei();
+
+  if (codigoConfigurado && codigo === codigoConfigurado) {
+    return true;
+  }
+
+  const [[usuario]] = await connection.query(
+    `
+    SELECT password
+    FROM usuarios
+    WHERE id_usuario = ?
+      AND activo = 1
+    LIMIT 1
+    `,
+    [idUsuario]
+  );
+
+  if (!usuario?.password) {
+    return false;
+  }
+
+  return bcrypt.compare(codigo, usuario.password);
 }
 
 function normalizarTexto(valor = "") {
@@ -87,6 +128,17 @@ function crearReferenciaTraspaso({
 }) {
   return `TRASPASO:${idLocalOrigen}>${idLocalDestino}:${idProductoOrigen}>${idProductoDestino}:${cantidad}:${Date.now()}`
     .slice(0, 100);
+}
+
+function crearReferenciaEliminacionImei({
+  idLocal,
+  idProducto,
+  imei1,
+  imei2
+}) {
+  const bloqueImeis = [imei1, imei2].filter(Boolean).join("/");
+
+  return `IMEI-ELIM:${idLocal}:${idProducto}:${bloqueImeis}:${Date.now()}`.slice(0, 100);
 }
 
 async function generarCodigoBarrasUnico(connection, idLocal) {
@@ -348,12 +400,12 @@ exports.listarInventario = async (req, res) => {
     }
 
     if (buscar) {
-      filtros += ` AND (
-        p.nombre_producto LIKE ?
-        OR p.codigo_barras LIKE ?
-        OR p.sku LIKE ?
-      )`;
-      params.push(`%${buscar}%`, `%${buscar}%`, `%${buscar}%`);
+      const searchClause = buildProductSearchClause("p", buscar);
+
+      if (searchClause) {
+        filtros += ` AND ${searchClause.sql}`;
+        params.push(...searchClause.params);
+      }
     }
 
     await db.query(
@@ -382,6 +434,10 @@ exports.listarInventario = async (req, res) => {
 
         p.id_producto,
         p.nombre_producto,
+        p.marca,
+        p.color,
+        p.capacidad,
+        p.estado,
         p.codigo_barras,
         p.sku,
         p.precio_unitario,
@@ -680,6 +736,182 @@ exports.ingresarPorIMEI = async (req, res) => {
       mensaje: "Error al ingresar IMEIs"
     });
 
+  } finally {
+    connection.release();
+  }
+};
+
+exports.eliminarImei = async (req, res) => {
+  const connection = await db.getConnection();
+  let transactionIniciada = false;
+
+  try {
+    const idUsuario = Number(req.user.id_usuario || 0);
+    const idLocal = Number(req.user.id_local || 0);
+    const idProducto = Number(req.params.id_producto || 0);
+    const idImei = Number(req.params.id_imei || 0);
+    const codigoVerificacion = String(req.body?.codigo_verificacion || "").trim();
+
+    if (!idProducto || !idImei) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Producto o IMEI inválido"
+      });
+    }
+
+    if (!codigoVerificacion) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Debes ingresar el código de verificación"
+      });
+    }
+
+    const codigoValido = await validarCodigoEliminacionImei(
+      connection,
+      idUsuario,
+      codigoVerificacion
+    );
+
+    if (!codigoValido) {
+      return res.status(403).json({
+        ok: false,
+        mensaje: "Código de verificación incorrecto"
+      });
+    }
+
+    await connection.beginTransaction();
+    transactionIniciada = true;
+
+    const [[imeiRow]] = await connection.query(
+      `
+      SELECT
+        ii.id_imei,
+        ii.id_producto,
+        ii.id_local,
+        ii.imei1,
+        ii.imei2,
+        ii.estado
+      FROM inventario_imei ii
+      INNER JOIN productos p
+        ON p.id_producto = ii.id_producto
+       AND p.id_local = ii.id_local
+      WHERE ii.id_imei = ?
+        AND ii.id_producto = ?
+        AND ii.id_local = ?
+      LIMIT 1
+      FOR UPDATE
+      `,
+      [idImei, idProducto, idLocal]
+    );
+
+    if (!imeiRow) {
+      await connection.rollback();
+      transactionIniciada = false;
+
+      return res.status(404).json({
+        ok: false,
+        mensaje: "No se encontró el IMEI en este producto"
+      });
+    }
+
+    if (String(imeiRow.estado || "").toLowerCase() !== "disponible") {
+      await connection.rollback();
+      transactionIniciada = false;
+
+      return res.status(409).json({
+        ok: false,
+        mensaje: "Solo puedes borrar IMEIs que estén disponibles"
+      });
+    }
+
+    const stock = await asegurarStockProducto(connection, idProducto, idLocal);
+
+    if (stock.stock_actual < 1) {
+      await connection.rollback();
+      transactionIniciada = false;
+
+      return res.status(409).json({
+        ok: false,
+        mensaje: "El stock actual no permite descontar este IMEI"
+      });
+    }
+
+    const stockNuevo = stock.stock_actual - 1;
+
+    await connection.query(
+      `
+      DELETE FROM inventario_imei
+      WHERE id_imei = ?
+      LIMIT 1
+      `,
+      [idImei]
+    );
+
+    await connection.query(
+      `
+      UPDATE inventario_stock
+      SET stock_actual = ?,
+          fecha_actualizacion = CURRENT_TIMESTAMP
+      WHERE id_stock = ?
+      `,
+      [stockNuevo, stock.id_stock]
+    );
+
+    const referencia = crearReferenciaEliminacionImei({
+      idLocal,
+      idProducto,
+      imei1: imeiRow.imei1,
+      imei2: imeiRow.imei2
+    });
+
+    await connection.query(
+      `
+      INSERT INTO movimientos_stock (
+        id_producto,
+        id_local,
+        id_usuario,
+        tipo,
+        motivo,
+        cantidad,
+        stock_anterior,
+        stock_nuevo,
+        referencia
+      ) VALUES (?, ?, ?, 'SALIDA', 'AJUSTE', ?, ?, ?, ?)
+      `,
+      [
+        idProducto,
+        idLocal,
+        idUsuario,
+        1,
+        stock.stock_actual,
+        stockNuevo,
+        referencia
+      ]
+    );
+
+    await connection.commit();
+    transactionIniciada = false;
+
+    res.json({
+      ok: true,
+      mensaje: `IMEI ${imeiRow.imei1} eliminado y stock descontado correctamente`,
+      data: {
+        id_imei: idImei,
+        imei1: imeiRow.imei1,
+        imei2: imeiRow.imei2,
+        stock_actual: stockNuevo
+      }
+    });
+  } catch (error) {
+    if (transactionIniciada) {
+      await connection.rollback();
+    }
+
+    console.error("❌ eliminarImei:", error);
+    res.status(500).json({
+      ok: false,
+      mensaje: error.message || "Error al eliminar el IMEI"
+    });
   } finally {
     connection.release();
   }

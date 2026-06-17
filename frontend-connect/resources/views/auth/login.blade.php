@@ -9,13 +9,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    min-height:100%;
+}
+
 body{
     background: radial-gradient(circle at top,#1a1f2e,#07090d);
-    height:100vh;
+    min-height:100vh;
+    min-height:100dvh;
     display:flex;
     justify-content:center;
     align-items:center;
     font-family:'Inter',sans-serif;
+    padding:20px 14px;
+    overflow:auto;
 }
 
 .login-card{
@@ -24,7 +39,7 @@ body{
     background:rgba(255,255,255,0.05);
     backdrop-filter:blur(15px);
     border:1px solid rgba(255,255,255,0.1);
-    padding:35px;
+    padding:32px;
     border-radius:20px;
     color:#fff;
     box-shadow:0 20px 60px rgba(0,0,0,0.6);
@@ -40,12 +55,18 @@ body{
 
 .logo-box img{
     width:150px;
+    max-width:100%;
 }
 
 .title{
     text-align:center;
     font-weight:800;
     margin-bottom:25px;
+}
+
+#loginForm{
+    display:grid;
+    gap:0;
 }
 
 .form-control{
@@ -77,6 +98,35 @@ body{
 
 .footer span{
     color:#d4af37;
+}
+
+@media (max-width: 520px){
+    body{
+        padding:16px 12px;
+        align-items:flex-start;
+    }
+
+    .login-card{
+        padding:24px 18px;
+        border-radius:18px;
+    }
+
+    .logo-box{
+        padding:8px;
+        margin-bottom:18px;
+    }
+
+    .logo-box img{
+        width:122px;
+    }
+
+    .title{
+        margin-bottom:20px;
+    }
+
+    .btn-main{
+        padding:13px 12px;
+    }
 }
 </style>
 </head>

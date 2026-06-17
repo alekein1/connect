@@ -82,13 +82,16 @@
 .table-wrap{
     margin-top:15px;
     border-radius:14px;
-    overflow:hidden;
+    overflow-x:auto;
+    overflow-y:hidden;
     border:1px solid rgba(255,255,255,0.05);
+    -webkit-overflow-scrolling:touch;
 }
 
 .table-pro{
     width:100%;
     border-collapse:collapse;
+    min-width:1120px;
 }
 
 .table-pro thead{
@@ -111,6 +114,22 @@
 
 .table-pro tr:hover{
     background:rgba(255,255,255,0.03);
+}
+
+.product-copy{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.product-title{
+    color:#fff;
+    font-weight:700;
+}
+
+.product-meta{
+    color:#94a3b8;
+    font-size:12px;
 }
 
 /* =========================
@@ -174,7 +193,14 @@
 .action-buttons{
     display:flex;
     gap:8px;
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
+    min-width:max-content;
+}
+
+.table-pro th:last-child,
+.table-pro td:last-child{
+    width:1%;
+    white-space:nowrap;
 }
 
 /* hover */
@@ -491,7 +517,7 @@
     display:none;
 }
 
-@media (max-width: 760px){
+@media (max-width: 767.98px){
     .imei-grid{
         grid-template-columns:1fr;
         justify-content:stretch;
@@ -526,6 +552,62 @@
     color:#fff;
     box-shadow:none;
 }
+
+.imei-existing-item{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    background:rgba(15,23,42,.92);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:14px;
+    padding:12px;
+}
+
+.imei-existing-copy{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:0;
+}
+
+.imei-existing-title{
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    word-break:break-word;
+}
+
+.imei-existing-subtitle{
+    color:#94a3b8;
+    font-size:11px;
+    word-break:break-word;
+}
+
+.imei-delete-btn{
+    background:linear-gradient(135deg,#fb7185,#e11d48);
+    color:#fff;
+    box-shadow:0 6px 15px rgba(225,29,72,.25);
+    flex-shrink:0;
+}
+
+.imei-delete-btn[disabled]{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+@media (max-width: 767.98px){
+    .imei-existing-item{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .imei-delete-btn{
+        width:100%;
+        justify-content:center;
+    }
+}
 </style>
 
 
@@ -558,7 +640,7 @@
                 <option value="">Todos los productos</option>
             </select>
 
-            <input id="f_buscar" class="input-pro" placeholder="Buscar...">
+            <input id="f_buscar" class="input-pro" placeholder="Buscar por nombre, marca, capacidad o codigo...">
 
             <label style="display:flex;align-items:center;color:#fff;font-size:12px;">
                 <input type="checkbox" id="f_stock_bajo" style="margin-right:5px;">
@@ -597,9 +679,9 @@
 
 <div class="modal-backdrop" id="imeiModal">
     <div class="modal-card">
-        <h4 class="modal-title" id="imeiModalTitle">Ingresar IMEIs</h4>
+        <h4 class="modal-title" id="imeiModalTitle">Gestionar IMEIs</h4>
         <p class="modal-copy">
-            Registra un celular por fila para que se diferencie claramente entre <b>IMEI 1</b> e <b>IMEI 2</b>.
+            Registra o corrige celulares por fila para que se diferencie claramente entre <b>IMEI 1</b> e <b>IMEI 2</b>.
         </p>
         <div class="modal-note">
             <div>
@@ -619,7 +701,25 @@
             </div>
         </div>
 
+        <div class="transfer-section">
+            <div class="transfer-summary" id="imeiExistentesResumen">
+                IMEIs registrados actualmente: <strong>0</strong>
+            </div>
+            <div class="transfer-helper">
+                Si un equipo se cargó mal, puedes borrarlo desde aquí y el stock bajará 1 unidad.
+                Para hacerlo, el sistema pedirá un código de verificación.
+            </div>
+            <div class="transfer-imei-list" id="imeiExistentesList">
+                <div class="transfer-empty">
+                    Aún no hay IMEIs cargados para este producto.
+                </div>
+            </div>
+        </div>
+
         <div class="modal-actions">
+            <button type="button" class="btn-ajustar btn-modal-secondary" id="btnAjusteManualDesdeImei">
+                Ajuste manual
+            </button>
             <button type="button" class="btn-ajustar btn-modal-secondary" id="btnCerrarImeiModal">
                 Cancelar
             </button>
@@ -715,7 +815,10 @@ const imeiRows = document.getElementById("imeiRows");
 const btnCerrarImeiModal = document.getElementById("btnCerrarImeiModal");
 const btnGuardarImeiModal = document.getElementById("btnGuardarImeiModal");
 const btnAgregarFilaImei = document.getElementById("btnAgregarFilaImei");
+const btnAjusteManualDesdeImei = document.getElementById("btnAjusteManualDesdeImei");
 const imeiReadyCount = document.getElementById("imeiReadyCount");
+const imeiExistentesResumen = document.getElementById("imeiExistentesResumen");
+const imeiExistentesList = document.getElementById("imeiExistentesList");
 const traspasoModal = document.getElementById("traspasoModal");
 const traspasoModalTitle = document.getElementById("traspasoModalTitle");
 const traspasoLocalDestino = document.getElementById("traspasoLocalDestino");
@@ -733,7 +836,45 @@ let inventarioActual = [];
 let productoImeiActivo = null;
 let productoTraspasoActivo = null;
 let localesDestinoCache = [];
+let imeisModalDisponibles = [];
 let imeisTraspasoDisponibles = [];
+let inventarioSearchTimer = null;
+
+function limpiarTextoProducto(valor = ""){
+    const texto = String(valor ?? "").trim();
+    return texto && texto.toUpperCase() !== "N/A" ? texto : "";
+}
+
+function obtenerPartesProducto(producto = {}){
+    return [
+        limpiarTextoProducto(producto.marca),
+        limpiarTextoProducto(producto.capacidad),
+        limpiarTextoProducto(producto.color),
+        limpiarTextoProducto(producto.estado)
+    ].filter(Boolean);
+}
+
+function formatearProducto(producto = {}){
+    const nombre = limpiarTextoProducto(producto.nombre_producto) || "Producto";
+    const detalle = obtenerPartesProducto(producto).join(" | ");
+    return detalle ? `${nombre} | ${detalle}` : nombre;
+}
+
+function renderProductoHtml(producto = {}){
+    const nombre = limpiarTextoProducto(producto.nombre_producto) || "Producto";
+    const detalle = obtenerPartesProducto(producto).join(" | ");
+
+    if(!detalle){
+        return `<span class="product-title">${nombre}</span>`;
+    }
+
+    return `
+        <div class="product-copy">
+            <span class="product-title">${nombre}</span>
+            <span class="product-meta">${detalle}</span>
+        </div>
+    `;
+}
 
 /* ===========================
    INIT
@@ -827,7 +968,7 @@ f_subcategoria.onchange = async ()=>{
     json.data
         .filter(p => p.id_subcategoria == f_subcategoria.value)
         .forEach(p=>{
-            f_producto.innerHTML += `<option value="${p.id_producto}">${p.nombre_producto}</option>`;
+            f_producto.innerHTML += `<option value="${p.id_producto}">${formatearProducto(p)}</option>`;
         });
 
     cargarInventario();
@@ -838,6 +979,13 @@ f_subcategoria.onchange = async ()=>{
 =========================== */
 [f_producto, f_buscar, f_stock_bajo].forEach(el=>{
     el.onchange = cargarInventario;
+});
+
+f_buscar.addEventListener("input", () => {
+    clearTimeout(inventarioSearchTimer);
+    inventarioSearchTimer = setTimeout(() => {
+        cargarInventario();
+    }, 250);
 });
 
 /* ===========================
@@ -873,7 +1021,7 @@ async function cargarInventario(){
         tabla.innerHTML += `
         <tr class="${bajo ? 'table-warning' : ''}">
             <td>${idx+1}</td>
-            <td>${i.nombre_producto}</td>
+            <td>${renderProductoHtml(i)}</td>
             <td>${i.nombre_categoria} / ${i.nombre_subcategoria}</td>
             <td><b>${i.stock_actual}</b></td>
             <td>$${i.precio_unitario}</td>
@@ -881,7 +1029,7 @@ async function cargarInventario(){
             <td>
                 <div class="action-buttons">
                     <button class="btn btn-sm btn-dark btn-ajustar" onclick="ajustar(${i.id_producto})">
-                        ${usaImei ? 'Ajustar / IMEI' : 'Ajustar'}
+                        ${usaImei ? 'Gestionar IMEIs' : 'Ajustar'}
                     </button>
                     <button class="btn btn-sm btn-dark btn-ajustar btn-transfer" onclick="abrirTraspaso(${i.id_producto})">
                         Traspasar
@@ -912,19 +1060,28 @@ function cerrarModalImei(limpiar = true){
 
     if(limpiar){
         reiniciarFormularioImei();
+        resetearImeisExistentes();
         productoImeiActivo = null;
     }
 }
 
-function abrirModalImei(producto){
+async function abrirModalImei(producto){
     productoImeiActivo = producto;
-    imeiModalTitle.textContent = `Ingresar IMEIs: ${producto.nombre_producto}`;
+    imeiModalTitle.textContent = `Gestionar IMEIs: ${formatearProducto(producto)}`;
     reiniciarFormularioImei();
+    resetearImeisExistentes("Cargando IMEIs disponibles...");
     imeiModal.classList.add("show");
     const primerInput = imeiRows.querySelector('[data-field="imei1"]');
 
     if(primerInput){
         primerInput.focus();
+    }
+
+    try{
+        await cargarImeisDisponiblesModal(producto.id_producto);
+    }catch(error){
+        console.error("Error cargar IMEIs del modal:", error);
+        resetearImeisExistentes("No se pudieron cargar los IMEIs disponibles.");
     }
 }
 
@@ -1023,6 +1180,58 @@ function reiniciarFormularioImei(){
     agregarFilaImei({}, false);
 }
 
+function resetearImeisExistentes(mensaje = "Aún no hay IMEIs cargados para este producto."){
+    imeisModalDisponibles = [];
+    imeiExistentesResumen.innerHTML = `IMEIs registrados actualmente: <strong>0</strong>`;
+    imeiExistentesList.innerHTML = `
+        <div class="transfer-empty">
+            ${mensaje}
+        </div>
+    `;
+}
+
+function renderImeisExistentes(){
+    const total = imeisModalDisponibles.length;
+    imeiExistentesResumen.innerHTML = `IMEIs registrados actualmente: <strong>${total}</strong>`;
+
+    if(!total){
+        imeiExistentesList.innerHTML = `
+            <div class="transfer-empty">
+                No hay IMEIs disponibles para este producto.
+            </div>
+        `;
+        return;
+    }
+
+    imeiExistentesList.innerHTML = imeisModalDisponibles.map((item) => `
+        <div class="imei-existing-item">
+            <div class="imei-existing-copy">
+                <div class="imei-existing-title">IMEI 1: ${item.imei1}</div>
+                <div class="imei-existing-subtitle">${item.imei2 ? `IMEI 2: ${item.imei2}` : "Sin IMEI 2"}</div>
+            </div>
+            <button
+                type="button"
+                class="btn-ajustar imei-delete-btn"
+                data-delete-imei="${item.id_imei}"
+            >
+                Borrar IMEI
+            </button>
+        </div>
+    `).join("");
+}
+
+async function cargarImeisDisponiblesModal(idProducto){
+    imeiExistentesList.innerHTML = `
+        <div class="transfer-empty">
+            Cargando IMEIs disponibles...
+        </div>
+    `;
+
+    const json = await api(`${API}/inventario/${idProducto}/imeis-disponibles`);
+    imeisModalDisponibles = Array.isArray(json.data) ? json.data : [];
+    renderImeisExistentes();
+}
+
 function obtenerImeisDesdeFormulario(){
     return obtenerFilasImei()
         .map((fila) => {
@@ -1035,6 +1244,60 @@ function obtenerImeisDesdeFormulario(){
             };
         })
         .filter(item => item.imei1);
+}
+
+async function eliminarImeiDisponible(idImei){
+    if(!productoImeiActivo){
+        return;
+    }
+
+    const imei = imeisModalDisponibles.find((item) => Number(item.id_imei) === Number(idImei));
+
+    if(!imei){
+        alert("No se encontró el IMEI seleccionado");
+        return;
+    }
+
+    const codigo = prompt(
+        `Ingresa el código de verificación para borrar el IMEI ${imei.imei1} y bajar 1 unidad del stock`
+    );
+
+    if(codigo === null){
+        return;
+    }
+
+    const codigoNormalizado = codigo.trim();
+
+    if(!codigoNormalizado){
+        alert("Debes ingresar el código de verificación");
+        return;
+    }
+
+    const res = await fetch(`${API}/inventario/${productoImeiActivo.id_producto}/imei/${idImei}/eliminar`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+            codigo_verificacion: codigoNormalizado
+        })
+    });
+
+    const json = await res.json();
+
+    if(!json.ok){
+        alert(json.mensaje || "No se pudo borrar el IMEI");
+        return;
+    }
+
+    if(productoImeiActivo && json.data && json.data.stock_actual !== undefined){
+        productoImeiActivo.stock_actual = Number(json.data.stock_actual || 0);
+    }
+
+    alert(json.mensaje || "IMEI eliminado correctamente");
+    await cargarImeisDisponiblesModal(productoImeiActivo.id_producto);
+    await cargarInventario();
 }
 
 async function guardarImeisDesdeModal(){
@@ -1165,7 +1428,7 @@ async function cargarImeisParaTraspaso(idProducto){
 
 async function abrirModalTraspasoPorProducto(producto){
     productoTraspasoActivo = producto;
-    traspasoModalTitle.textContent = `Traspasar: ${producto.nombre_producto}`;
+    traspasoModalTitle.textContent = `Traspasar: ${formatearProducto(producto)}`;
     renderLocalesDestino();
     traspasoCantidad.value = "1";
     traspasoModal.classList.add("show");
@@ -1379,19 +1642,23 @@ async function ajustar(id){
     }
 
     if(esProductoConImei(producto)){
-        const usarImeis = confirm(
-            `${producto.nombre_producto} pertenece a celulares.\n\nAceptar = ingresar equipos por IMEI\nCancelar = ajuste manual por cantidad`
-        );
-
-        if(usarImeis){
-            abrirModalImei(producto);
-            return;
-        }
+        await abrirModalImei(producto);
+        return;
     }
 
     await ajustarCantidadManual(id);
 }
 
+async function ajustarCantidadDesdeModalImei(){
+    if(!productoImeiActivo){
+        return;
+    }
+
+    await ajustarCantidadManual(productoImeiActivo.id_producto);
+    await cargarInventario();
+}
+
+btnAjusteManualDesdeImei.addEventListener("click", ajustarCantidadDesdeModalImei);
 btnCerrarImeiModal.addEventListener("click", () => cerrarModalImei());
 btnGuardarImeiModal.addEventListener("click", guardarImeisDesdeModal);
 btnAgregarFilaImei.addEventListener("click", () => agregarFilaImei());
@@ -1431,6 +1698,34 @@ imeiRows.addEventListener("click", (event) => {
     actualizarEstadoFilasImei();
 });
 
+imeiExistentesList.addEventListener("click", async (event) => {
+    const btnEliminar = event.target.closest("[data-delete-imei]");
+
+    if(!btnEliminar){
+        return;
+    }
+
+    const idImei = Number(btnEliminar.dataset.deleteImei || 0);
+
+    if(!idImei){
+        return;
+    }
+
+    const originalText = btnEliminar.innerText;
+    btnEliminar.disabled = true;
+    btnEliminar.innerText = "Borrando...";
+
+    try{
+        await eliminarImeiDisponible(idImei);
+    }catch(error){
+        console.error("Error eliminar IMEI:", error);
+        alert("No se pudo borrar el IMEI");
+    }finally{
+        btnEliminar.disabled = false;
+        btnEliminar.innerText = originalText;
+    }
+});
+
 traspasoCantidad.addEventListener("input", () => {
     if(Number(traspasoCantidad.value || 0) < 1){
         traspasoCantidad.value = "1";
@@ -1457,6 +1752,7 @@ traspasoModal.addEventListener("click", (event) => {
 
 btnDescargarPdfStock.addEventListener("click", descargarPdfStock);
 reiniciarFormularioImei();
+resetearImeisExistentes();
 resetearTraspasoModal();
 </script>
 

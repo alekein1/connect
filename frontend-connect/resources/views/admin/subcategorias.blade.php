@@ -366,7 +366,7 @@
     color: #fff;
 }
 
-    @media (max-width: 900px){
+    @media (max-width: 767.98px){
         .stats-grid{
             grid-template-columns: 1fr;
         }

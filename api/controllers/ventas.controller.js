@@ -11,6 +11,7 @@ const {
   ensureDetalleVentaImeiColumn,
   ensureVentaAnulacionSchema
 } = require("../services/ventas-schema.service");
+const { buildProductSearchClause } = require("../services/product-search.service");
 
 /* ============================================
    📦 GENERAR SECUENCIAL FACTURA
@@ -149,6 +150,20 @@ function safeText(value, fallback = "N/A") {
   return text ? text : fallback;
 }
 
+function toUploadUrl(filePath) {
+  if (!filePath) return null;
+
+  const normalizedRoot = path.resolve(__dirname, "../uploads");
+  const normalizedFile = path.resolve(filePath);
+  const relativePath = path.relative(normalizedRoot, normalizedFile);
+
+  if (!relativePath || relativePath.startsWith("..")) {
+    return null;
+  }
+
+  return `/api/uploads/${relativePath.split(path.sep).join("/")}`;
+}
+
 function digitsOnly(value) {
   return String(value || "").replace(/\D/g, "");
 }
@@ -222,6 +237,11 @@ function formatDateTimeEc(value) {
 function formatDateKey(value) {
   const [day, month, year] = formatDateEc(value).split("/");
   return `${day}${month}${year}`;
+}
+
+function getInternalComprobanteTitle(venta = {}) {
+  const tipoVenta = String(venta?.tipo_venta || "").trim().toUpperCase();
+  return tipoVenta === "FINANCIADO" ? "RECIBO DE CREDITO" : "NOTA DE VENTA";
 }
 
 function validarFechaIso(value) {
@@ -506,6 +526,8 @@ async function fetchVentaAdminDetalle(executor, idVenta, idLocal) {
       c.telefono AS cliente_telefono,
       c.direccion AS cliente_direccion,
       l.nombre_local,
+      l.direccion AS local_direccion,
+      l.telefono AS local_telefono,
       u.usuario AS usuario_venta,
       ua.usuario AS usuario_anulacion,
       COALESCE((
@@ -515,7 +537,15 @@ async function fetchVentaAdminDetalle(executor, idVenta, idLocal) {
           AND sd.tipo_comprobante = 'FACTURA'
         ORDER BY sd.id_documento_sri DESC
         LIMIT 1
-      ), 'SIN_DOCUMENTO') AS estado_documento_sri
+      ), 'SIN_DOCUMENTO') AS estado_documento_sri,
+      (
+        SELECT sd.ride_path
+        FROM sri_documentos sd
+        WHERE sd.id_venta = v.id_venta
+          AND sd.tipo_comprobante = 'FACTURA'
+        ORDER BY sd.id_documento_sri DESC
+        LIMIT 1
+      ) AS ride_path
     FROM ventas v
     LEFT JOIN clientes c
       ON c.id_cliente = v.id_cliente
@@ -578,6 +608,7 @@ async function fetchVentaAdminDetalle(executor, idVenta, idLocal) {
     ...venta,
     detalle,
     pagos,
+    ride_url: toUploadUrl(venta.ride_path),
     puede_anular:
       venta.estado === "PAGADA" &&
       venta.estado_documento_sri !== "AUTORIZADO"
@@ -588,6 +619,7 @@ function generateComprobantePdfBuffer(venta) {
   const sri = buildSriPreviewData(venta);
   const logoPath = resolveLogoPath();
   const legalNotes = getLegalNotes();
+  const internalTitle = getInternalComprobanteTitle(venta);
 
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
@@ -709,7 +741,7 @@ function generateComprobantePdfBuffer(venta) {
       .font("Helvetica-Bold")
       .fontSize(16)
       .fillColor(colors.brand)
-      .text("FACTURA INTERNA", leftX + leftHeaderWidth + 28, y + 16, {
+      .text(internalTitle, leftX + leftHeaderWidth + 28, y + 16, {
         width: rightHeaderWidth - 56,
         align: "center"
       });
@@ -1142,21 +1174,34 @@ exports.crearVenta = async (req, res) => {
           p.precio_unitario,
           p.precio_compra,
           p.graba_iva,
-          i.stock_actual
-        FROM productos p
-        INNER JOIN inventario_stock i
+          i.stock_actual,
+          (
+            SELECT COUNT(*)
+            FROM inventario_imei ii
+            WHERE ii.id_producto = i.id_producto
+              AND ii.id_local = i.id_local
+              AND ii.estado = 'disponible'
+          ) AS imeis_disponibles
+        FROM inventario_stock i
+        INNER JOIN productos p
           ON i.id_producto = p.id_producto
-         AND i.id_local = ?
-        WHERE p.id_producto = ?
-          AND p.id_local = ?
+        WHERE i.id_producto = ?
+          AND i.id_local = ?
+          AND p.activo = 1
         LIMIT 1
-      `, [id_local, id_producto, id_local]);
+      `, [id_producto, id_local]);
 
       if (!prod) {
         throw new Error(`Producto no existe en este local: ${id_producto}`);
       }
 
-      if (prod.stock_actual < cantidad) {
+      const stockActual = Number(prod.stock_actual || 0);
+      const imeisDisponibles = Number(prod.imeis_disponibles || 0);
+      const stockDisponible = imei
+        ? Math.max(stockActual, imeisDisponibles)
+        : stockActual;
+
+      if (stockDisponible < cantidad) {
         throw new Error(`Stock insuficiente para ${prod.nombre_producto}`);
       }
 
@@ -1224,8 +1269,8 @@ exports.crearVenta = async (req, res) => {
         costo_unitario,
         costo_total,
         ganancia,
-        stock_anterior: Number(prod.stock_actual),
-        stock_nuevo: Number(prod.stock_actual) - cantidad
+        stock_anterior: stockDisponible,
+        stock_nuevo: stockDisponible - cantidad
       });
     }
 
@@ -1288,7 +1333,7 @@ exports.crearVenta = async (req, res) => {
     }
 
     /* ===============================
-       🧾 FACTURA INTERNA
+       🧾 COMPROBANTE INTERNO
     =============================== */
     const secuencial = await generarSecuencial(connection, establecimiento, punto_emision);
     const numero_comprobante = `${establecimiento}-${punto_emision}-${secuencial}`;
@@ -1888,49 +1933,109 @@ exports.buscarProductoPOS = async (req, res) => {
       });
     }
 
-    const busqueda = `%${q}%`;
+    const searchClause = buildProductSearchClause("p", q);
+    const imeiQuery = String(q || "").replace(/\D+/g, "").trim();
+    const shouldSearchByImei = imeiQuery.length >= 6;
+
+    if (!searchClause) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Debe enviar parámetro de búsqueda válido"
+      });
+    }
+
+    const searchSql = shouldSearchByImei
+      ? `(
+          ${searchClause.sql}
+          OR EXISTS (
+            SELECT 1
+            FROM inventario_imei ii
+            WHERE ii.id_producto = p.id_producto
+              AND ii.id_local = ?
+              AND ii.estado = 'disponible'
+              AND (
+                ii.imei1 LIKE ?
+                OR COALESCE(ii.imei2, '') LIKE ?
+              )
+          )
+        )`
+      : searchClause.sql;
+
+    const searchParams = shouldSearchByImei
+      ? [
+          ...searchClause.params,
+          id_local,
+          `%${imeiQuery}%`,
+          `%${imeiQuery}%`
+        ]
+      : searchClause.params;
 
     const [rows] = await db.query(`
   SELECT 
     p.id_producto,
     p.nombre_producto,
+    p.marca,
+    p.color,
+    p.capacidad,
+    p.estado,
     p.codigo_barras,
     p.sku,
     p.imagen,
     p.precio_unitario,
     p.graba_iva,
-    i.stock_actual,
-
+    GREATEST(COALESCE(i.stock_actual, 0), COALESCE(imei_stock.imeis_disponibles, 0)) AS stock_actual,
+    ${
+      shouldSearchByImei
+        ? `
     (
-      SELECT GROUP_CONCAT(imei1 SEPARATOR ',')
-      FROM inventario_imei 
-      WHERE id_producto = p.id_producto 
-      AND id_local = ?
-      AND estado = 'disponible'
-    ) as imeis
+      SELECT ii.imei1
+      FROM inventario_imei ii
+      WHERE ii.id_producto = p.id_producto
+        AND ii.id_local = ?
+        AND ii.estado = 'disponible'
+        AND (
+          ii.imei1 LIKE ?
+          OR COALESCE(ii.imei2, '') LIKE ?
+        )
+      ORDER BY ii.fecha_ingreso ASC, ii.id_imei ASC
+      LIMIT 1
+    ) as imei_encontrado,
+    `
+        : `
+    NULL as imei_encontrado,
+    `
+    }
 
-  FROM productos p
-  INNER JOIN inventario_stock i 
-    ON i.id_producto = p.id_producto
-   AND i.id_local = ?
+    COALESCE(imei_stock.imeis, '') as imeis
+
+  FROM inventario_stock i
+  INNER JOIN productos p 
+    ON p.id_producto = i.id_producto
+  LEFT JOIN (
+    SELECT
+      id_producto,
+      id_local,
+      COUNT(*) AS imeis_disponibles,
+      GROUP_CONCAT(imei1 ORDER BY fecha_ingreso ASC, id_imei ASC SEPARATOR ',') AS imeis
+    FROM inventario_imei
+    WHERE estado = 'disponible'
+    GROUP BY id_producto, id_local
+  ) imei_stock
+    ON imei_stock.id_producto = i.id_producto
+   AND imei_stock.id_local = i.id_local
 
   WHERE 
-    p.id_local = ?
+    i.id_local = ?
     AND p.activo = 1
-    AND (
-      p.codigo_barras = ?
-      OR p.sku = ?
-      OR p.nombre_producto LIKE ?
-    )
+    AND GREATEST(COALESCE(i.stock_actual, 0), COALESCE(imei_stock.imeis_disponibles, 0)) > 0
+    AND ${searchSql}
 
-  LIMIT 10
+  ORDER BY p.nombre_producto ASC, p.id_producto ASC
+  LIMIT 30
 `, [
-  id_local,   // imeis subquery
+  ...(shouldSearchByImei ? [id_local, `%${imeiQuery}%`, `%${imeiQuery}%`] : []),
   id_local,   // inventario_stock
-  id_local,   // productos
-  q,
-  q,
-  busqueda
+  ...searchParams
 ]);
 
     res.json({

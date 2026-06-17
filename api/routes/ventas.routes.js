@@ -17,7 +17,7 @@ router.get(
 // ➕ Crear venta
 router.post(
   "/",
-  auth(["CAJA"]), // 🔥 SOLO CAJA
+  auth(["CAJA"]),
   ventasCtrl.crearVenta
 );
 
@@ -29,7 +29,7 @@ router.get(
 
 router.get(
   "/:id",
-  auth(["ADMIN"]),
+  auth(["CAJA", "ADMIN"]),
   ventasCtrl.obtenerDetalleVentaAdmin
 );
 
