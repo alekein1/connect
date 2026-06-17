@@ -451,7 +451,7 @@
 
                     <div class="field">
                         <label>Ruta Certificado en Servidor</label>
-                        <input type="text" id="config_ruta_certificado" placeholder="/ruta/al/certificado.p12">
+                        <input type="text" id="config_ruta_certificado" placeholder="Opcional: deja vacío si cargas el archivo">
                     </div>
 
                     <div class="field">
@@ -570,6 +570,8 @@
         const btnGenerarRide = document.getElementById("btnGenerarRide");
         const btnEnviarCorreo = document.getElementById("btnEnviarCorreo");
         const apiChipXml = document.getElementById("apiChipXml");
+        const configCertificadoInput = document.getElementById("config_certificado");
+        const configRutaCertificadoInput = document.getElementById("config_ruta_certificado");
 
         apiChip.textContent = API;
         apiChipConfig.textContent = ENDPOINT_CONFIG;
@@ -615,6 +617,39 @@
 
         function prettyPrintXml(data){
             resultadoXml.textContent = JSON.stringify(data, null, 2);
+        }
+
+        function actualizarRutaCertificadoPorArchivo(){
+            const archivo = configCertificadoInput.files[0];
+
+            if(archivo){
+                configRutaCertificadoInput.value = "";
+                configRutaCertificadoInput.disabled = true;
+                configRutaCertificadoInput.placeholder = "Se guardará automáticamente en el servidor";
+                return;
+            }
+
+            configRutaCertificadoInput.disabled = false;
+            configRutaCertificadoInput.placeholder = "Opcional: deja vacío si cargas el archivo";
+        }
+
+        function esRutaDeComputadoraLocal(ruta = ""){
+            const value = String(ruta || "").trim();
+
+            return (
+                value.startsWith("/Users/") ||
+                /^[A-Za-z]:[\\/]/.test(value)
+            );
+        }
+
+        function limpiarRutaLocalCertificadoSiExiste(){
+            if(!esRutaDeComputadoraLocal(configRutaCertificadoInput.value)){
+                return false;
+            }
+
+            configRutaCertificadoInput.value = "";
+            configRutaCertificadoInput.placeholder = "Sube el certificado .p12 para guardarlo en el servidor";
+            return true;
         }
 
         async function cargarLocalesPrueba(){
@@ -721,11 +756,19 @@
                 document.getElementById("config_ambiente").value = data.ambiente || "PRUEBAS";
                 document.getElementById("config_correo_notificacion").value = data.correo_notificacion || "";
                 document.getElementById("config_telefono").value = data.telefono || "";
-                document.getElementById("config_ruta_certificado").value = data.certificado_path || "";
+                configRutaCertificadoInput.disabled = false;
+                configRutaCertificadoInput.placeholder = "Opcional: deja vacío si cargas el archivo";
+                configRutaCertificadoInput.value = data.certificado_path || "";
+                const teniaRutaLocal = limpiarRutaLocalCertificadoSiExiste();
                 document.getElementById("config_clave_certificado").value = "";
-                document.getElementById("config_certificado").value = "";
+                configCertificadoInput.value = "";
 
-                setConfigStatus("success", data ? "Configuracion cargada correctamente" : "Aun no existe configuracion para ese local");
+                setConfigStatus(
+                    teniaRutaLocal ? "error" : "success",
+                    teniaRutaLocal
+                        ? "La ruta guardada pertenece a otra computadora. Sube el certificado .p12 y guarda nuevamente."
+                        : (data ? "Configuracion cargada correctamente" : "Aun no existe configuracion para ese local")
+                );
             }catch(error){
                 console.error(error);
                 resultadoConfig.textContent = String(error);
@@ -735,6 +778,7 @@
 
         btnCargarConfig.addEventListener("click", cargarConfiguracionSri);
         document.getElementById("config_id_local").addEventListener("change", cargarConfiguracionSri);
+        configCertificadoInput.addEventListener("change", actualizarRutaCertificadoPorArchivo);
 
         formSri.addEventListener("submit", async (event)=>{
             event.preventDefault();
@@ -833,11 +877,25 @@
                 formData.append("correo_notificacion", document.getElementById("config_correo_notificacion").value.trim());
                 formData.append("telefono", document.getElementById("config_telefono").value.trim());
 
-                const rutaConfig = document.getElementById("config_ruta_certificado").value.trim();
+                const rutaConfig = configRutaCertificadoInput.value.trim();
                 const claveConfig = document.getElementById("config_clave_certificado").value.trim();
-                const archivoConfig = document.getElementById("config_certificado").files[0];
+                const archivoConfig = configCertificadoInput.files[0];
 
-                if(rutaConfig){
+                if(esRutaDeComputadoraLocal(rutaConfig)){
+                    setConfigStatus("error", "Esa ruta es de tu computadora, no del servidor. Selecciona el archivo .p12 y guarda nuevamente.");
+                    btnGuardarConfig.disabled = false;
+                    btnGuardarConfig.textContent = "Guardar configuracion";
+                    return;
+                }
+
+                if(!archivoConfig && !rutaConfig && configRutaCertificadoInput.placeholder.includes(".p12")){
+                    setConfigStatus("error", "Debes seleccionar el certificado .p12 para subirlo al servidor.");
+                    btnGuardarConfig.disabled = false;
+                    btnGuardarConfig.textContent = "Guardar configuracion";
+                    return;
+                }
+
+                if(rutaConfig && !archivoConfig){
                     formData.append("ruta_certificado", rutaConfig);
                 }
 
@@ -873,11 +931,14 @@
                 setConfigStatus("success", "Configuracion SRI guardada correctamente");
 
                 if(json.data?.certificado_path){
-                    document.getElementById("config_ruta_certificado").value = json.data.certificado_path;
+                    configRutaCertificadoInput.disabled = false;
+                    configRutaCertificadoInput.placeholder = "Opcional: deja vacío si cargas el archivo";
+                    configRutaCertificadoInput.value = json.data.certificado_path;
                 }
 
                 document.getElementById("config_clave_certificado").value = "";
-                document.getElementById("config_certificado").value = "";
+                configCertificadoInput.value = "";
+                actualizarRutaCertificadoPorArchivo();
             }catch(error){
                 console.error(error);
                 resultadoConfig.textContent = String(error);

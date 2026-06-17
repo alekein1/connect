@@ -1,4 +1,5 @@
 const fs = require("fs");
+const https = require("https");
 const path = require("path");
 const { execFileSync } = require("child_process");
 const { createPrivateKey, createPublicKey } = require("crypto");
@@ -422,38 +423,61 @@ function buildAutorizacionEnvelope(claveAcceso) {
 </soapenv:Envelope>`;
 }
 
-async function soapRequest(url, envelope) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 25000);
+function formatSriConnectionError(error) {
+  const code = error?.code || error?.cause?.code || "";
+  const detail = error?.message || error?.cause?.message || "error de conexion";
 
-  try {
-    const response = await fetch(url, {
+  return [code, detail].filter(Boolean).join(" - ");
+}
+
+function assertSoapHttpOk(response, stageName) {
+  if (response?.ok) return;
+
+  const location = response?.headers?.location ? ` Redireccion: ${response.headers.location}.` : "";
+
+  throw createError(`El SRI respondio HTTP ${response?.status || "SIN_ESTADO"} en ${stageName}.${location} Intenta consultar nuevamente en unos minutos.`, 502);
+}
+
+async function soapRequest(url, envelope) {
+  return new Promise((resolve, reject) => {
+    const request = https.request(url, {
       method: "POST",
+      timeout: 25000,
       headers: {
         "Content-Type": "text/xml; charset=utf-8",
         Accept: "text/xml",
-        SOAPAction: "\"\""
-      },
-      body: envelope,
-      signal: controller.signal
+        SOAPAction: "\"\"",
+        "Content-Length": Buffer.byteLength(envelope)
+      }
+    }, (response) => {
+      let text = "";
+
+      response.setEncoding("utf8");
+      response.on("data", (chunk) => {
+        text += chunk;
+      });
+      response.on("end", () => {
+        resolve({
+          status: response.statusCode,
+          ok: response.statusCode >= 200 && response.statusCode < 300,
+          headers: response.headers,
+          text
+        });
+      });
     });
 
-    const text = await response.text();
+    request.on("timeout", () => {
+      request.destroy();
+      reject(createError("El SRI no respondio dentro del tiempo esperado", 504));
+    });
 
-    return {
-      status: response.status,
-      ok: response.ok,
-      text
-    };
-  } catch (error) {
-    if (error?.name === "AbortError") {
-      throw createError("El SRI no respondio dentro del tiempo esperado", 504);
-    }
+    request.on("error", (error) => {
+      reject(createError(`No se pudo conectar con el SRI: ${formatSriConnectionError(error)}`, 502));
+    });
 
-    throw createError(`No se pudo conectar con el SRI: ${error.message}`, 502);
-  } finally {
-    clearTimeout(timeout);
-  }
+    request.write(envelope);
+    request.end();
+  });
 }
 
 function runOpenSsl(args, options = {}) {
@@ -1991,6 +2015,7 @@ async function enviarNotaCreditoFirmada(idNotaCredito) {
   const xmlFirmado = fs.readFileSync(notaCredito.xml_firmado_path, "utf8");
   const soapEnvelope = buildRecepcionEnvelope(xmlFirmado);
   const soapResponse = await soapRequest(endpoints.recepcion, soapEnvelope);
+  assertSoapHttpOk(soapResponse, "recepcion");
   const parsed = parseRecepcionSoapResponse(soapResponse.text);
 
   if (!parsed.ok) {
@@ -2730,6 +2755,7 @@ async function consultarAutorizacionNotaCredito(idNotaCredito, { intentarAplicar
   const endpoints = getSriSoapEndpoints(config.ambiente);
   const soapEnvelope = buildAutorizacionEnvelope(notaCredito.clave_acceso);
   const soapResponse = await soapRequest(endpoints.autorizacion, soapEnvelope);
+  assertSoapHttpOk(soapResponse, "autorizacion");
   const parsed = parseAutorizacionSoapResponse(soapResponse.text);
 
   if (!parsed.ok) {

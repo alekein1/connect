@@ -1608,6 +1608,104 @@ async function postSri(idVenta, action, body, buttonText) {
     });
 }
 
+function postSriSilencioso(idVenta, action, body = null) {
+    return apiFetch(`${API}/sri/facturas/${idVenta}/${action}`, {
+        method: "POST",
+        headers: body ? { "Content-Type": "application/json" } : undefined,
+        body: body ? JSON.stringify(body) : undefined
+    });
+}
+
+function mensajeSriParaCaja(error, fallback = "La factura quedó pendiente de autorización. Consulta el estado del SRI más tarde.") {
+    const raw = String(error?.message || error || "");
+    const normalized = raw.toUpperCase();
+
+    if (
+        normalized.includes("HTTP 302") ||
+        normalized.includes("FETCH FAILED") ||
+        normalized.includes("NO SE PUDO CONECTAR") ||
+        normalized.includes("NO RESPONDIO") ||
+        normalized.includes("TIMEOUT") ||
+        normalized.includes("ECONNRESET") ||
+        normalized.includes("ETIMEDOUT")
+    ) {
+        return "El SRI no está respondiendo correctamente en este momento. La venta quedó guardada; consulta la autorización más tarde.";
+    }
+
+    if (normalized.includes("CLAVE ACCESO REGISTRADA")) {
+        return "La factura ya fue recibida por el SRI. Consulta la autorización más tarde.";
+    }
+
+    return raw || fallback;
+}
+
+const sriAutorizacionesProgramadas = new Set();
+const sriReintentosAutorizacionMs = [30000, 120000, 300000];
+
+function esperar(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function obtenerRideSriSilencioso(idVenta) {
+    try {
+        const ride = await postSriSilencioso(idVenta, "ride");
+        return ride?.data?.ride_url || "";
+    } catch {
+        return "";
+    }
+}
+
+function actualizarUltimaVentaSriAutorizada(idVenta, rideUrl = "") {
+    const lastSale = obtenerUltimaVenta();
+
+    if (Number(lastSale?.idVenta || 0) !== Number(idVenta || 0)) {
+        return;
+    }
+
+    guardarUltimaVenta({
+        ...lastSale,
+        mode: "SRI",
+        rideUrl: rideUrl || lastSale.rideUrl || ""
+    });
+}
+
+function programarConsultaAutorizacionSri(idVenta) {
+    const id = Number(idVenta || 0);
+
+    if (!id || sriAutorizacionesProgramadas.has(id)) {
+        return;
+    }
+
+    sriAutorizacionesProgramadas.add(id);
+
+    (async () => {
+        for (const delay of sriReintentosAutorizacionMs) {
+            await esperar(delay);
+
+            try {
+                const autorizacion = await postSriSilencioso(id, "autorizar");
+                const estado = autorizacion?.data?.estado;
+
+                if (estado === "AUTORIZADO") {
+                    const rideUrl = await obtenerRideSriSilencioso(id);
+                    actualizarUltimaVentaSriAutorizada(id, rideUrl);
+                    showFeedback("Factura autorizada automáticamente por el SRI. Ya puedes reimprimir el RIDE.", "success");
+                    return;
+                }
+
+                if (estado === "RECHAZADO") {
+                    showFeedback("El SRI no autorizó la factura. Revisa el detalle en el módulo SRI.", "error");
+                    return;
+                }
+            } catch {
+                // El SRI puede estar intermitente; el siguiente intento vuelve a consultar.
+            }
+        }
+    })().finally(() => {
+        sriAutorizacionesProgramadas.delete(id);
+    });
+}
+
 async function procesarSriVenta(idVenta, correoDestino, popupWindow) {
     await postSri(idVenta, "xml", null, "Generando XML...");
     await postSri(idVenta, "firmar", null, "Firmando...");
@@ -1621,7 +1719,17 @@ async function procesarSriVenta(idVenta, correoDestino, popupWindow) {
         throw new Error(envioDetalle || "El SRI rechazó la recepción");
     }
 
-    const autorizacion = await postSri(idVenta, "autorizar", null, "Consultando autorización...");
+    let autorizacion = null;
+
+    try {
+        autorizacion = await postSri(idVenta, "autorizar", null, "Consultando autorización...");
+    } catch (error) {
+        return {
+            estado: "PENDIENTE",
+            mensaje: mensajeSriParaCaja(error),
+            reintentarAutorizacion: true
+        };
+    }
 
     if (autorizacion?.data?.pendiente_autorizacion) {
         if (popupWindow && !popupWindow.closed) {
@@ -1629,7 +1737,8 @@ async function procesarSriVenta(idVenta, correoDestino, popupWindow) {
         }
         return {
             estado: "PENDIENTE",
-            mensaje: "Factura enviada al SRI, aún en proceso"
+            mensaje: "Factura enviada al SRI, aún en proceso",
+            reintentarAutorizacion: true
         };
     }
 
@@ -1876,7 +1985,10 @@ async function crearVenta(modoVenta = "NORMAL") {
             });
 
             if (sri.estado === "PENDIENTE") {
-                showFeedback("Venta guardada. La factura fue enviada al SRI y sigue en proceso.", "success");
+                if (sri.reintentarAutorizacion) {
+                    programarConsultaAutorizacionSri(idVenta);
+                }
+                showFeedback(sri.mensaje || "Venta guardada. La factura fue enviada al SRI y sigue en proceso.", "success");
             } else if (sri.avisoCorreo) {
                 showFeedback(`Factura autorizada. El correo no se pudo enviar: ${sri.avisoCorreo}`, "success");
             } else {
@@ -1908,10 +2020,10 @@ async function crearVenta(modoVenta = "NORMAL") {
         }
 
         if (modoVenta === "SRI") {
-            const mensajeSri = error.message || "Error SRI";
+            const mensajeSri = mensajeSriParaCaja(error, "No se pudo completar el proceso SRI.");
             showFeedback(
                 ventaGuardada
-                    ? `La venta se guardó, pero el proceso SRI falló: ${mensajeSri}`
+                    ? `Venta guardada. ${mensajeSri}`
                     : mensajeSri,
                 "error"
             );
