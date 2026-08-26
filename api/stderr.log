@@ -385,3 +385,1459 @@ Node.js v20.20.0
 ❌ crearVenta: Error: IMEI no disponible: 356034751690172
     at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:931:17)
     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSri: Error: No existe un documento SRI para esta venta. Primero genera el XML
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at getSriDocumentoVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:285:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:406:21)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 400
+}
+❌ crearVenta: Error: IMEI no disponible: 356034751526160
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:946:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSri: Error: El SRI no respondio dentro del tiempo esperado
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:259:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 504
+}
+❌ crearVenta: Error: Stock insuficiente para MOTO G 60 FUSION / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para MOTO G 60 FUSION / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para MOTO G 60 FUSION / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para MOTOROLA G06 / VERDE
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:6:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ crearVenta: Error: IMEI no disponible: 862690080030062
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:946:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para NOTE 15 PRO / G
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X8d / G
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 867306082168629
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:946:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para REDMI NOTE 15 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: Stock insuficiente para SAMSUNG A26 / 70
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para FLASH MEMORY
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para Redmi  15C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 350711502088436
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:946:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 350711502088436
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:946:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 866501075641506
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:946:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para TECNO SPARK 40 PRO + / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para INFINIX NOTE 60 PRO/ A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para INFINIX NOTE 60 PRO/ A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X7D / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:928:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para REDMI A5 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1160:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para REDMI A5 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1160:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para REDMI A5 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1160:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para REDMI A5 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1160:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 861663080051033
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1178:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:01:49', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:02:22', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:02:26', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:04:31', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:04:35', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:04:39', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:04:42', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:04:46', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:04:50', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:08:32', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:08:35', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:09:04', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 313, 105, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000279 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:10:04', 100, 100)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 313, 105, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000279 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:10:39', 100, 100)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (3, 3, 181, 59, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000147 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:11:25', 4, 3.48)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (3, 3, 181, 59, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000147 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:11:26', 4, 3.48)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (3, 3, 181, 59, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000147 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:11:26', 4, 3.48)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:11:29', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:11:31', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ emitirNotaCreditoSuperadmin: Error: Column count doesn't match value count at row 1
+    at PromisePoolConnection.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/connection.js:29:22)
+    at insertNotaCreditoBase (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1603:37)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:2983:22)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  code: 'ER_WRONG_VALUE_COUNT_ON_ROW',
+  errno: 1136,
+  sql: '\n' +
+    '    INSERT INTO sri_notas_credito (\n' +
+    '      id_local,\n' +
+    '      id_local_config,\n' +
+    '      id_venta,\n' +
+    '      id_documento_sri_factura,\n' +
+    '      id_usuario_emisor,\n' +
+    '      motivo,\n' +
+    '      estado,\n' +
+    '      ambiente,\n' +
+    '      estab,\n' +
+    '      pto_emi,\n' +
+    '      secuencial,\n' +
+    '      numero_comprobante,\n' +
+    '      fecha_emision,\n' +
+    '      valor_modificacion,\n' +
+    '      total_sin_impuestos,\n' +
+    '      total_impuesto\n' +
+    "    ) VALUES (4, 3, 323, 106, 5, 'BORRADOR', 'Anulacion total de factura 001-001-000000289 por regularizacion administrativa.', 'PRODUCCION', '001', '001', '000000006', '001-001-000000006', '2026-04-29 17:11:36', 210, 210)\n" +
+    '  ',
+  sqlState: '21S01',
+  sqlMessage: "Column count doesn't match value count at row 1"
+}
+❌ crearVenta: Error: Stock insuficiente para SAMSUNG A52 / 30
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ emitirNotaCreditoSuperadmin: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:453:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async enviarNotaCreditoFirmada (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:1993:24)
+    at async emitirNotaCreditoDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-nota-credito.service.js:3069:5)
+    at async exports.emitirNotaCreditoSuperadmin (/home/connectri4/app.connectriobamba.com/api/controllers/notasCredito.controller.js:113:18) {
+  status: 502
+}
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ crearVenta: Error: Stock insuficiente para MOTO G 06 / V
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para MOTO G 06 / V
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSriCorreo: Error: Can't send mail - all recipients were rejected: 501 <belyndapaca@gmail..com>: domain missing or malformed
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._actionRCPT (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1751:28)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1715:22)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+    at TLSSocket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5) {
+  code: 'EENVELOPE',
+  response: '501 <belyndapaca@gmail..com>: domain missing or malformed',
+  responseCode: 501,
+  command: 'RCPT TO',
+  rejected: [ 'belyndapaca@gmail..com' ],
+  rejectedErrors: [
+    Error: Recipient command failed: 501 <belyndapaca@gmail..com>: domain missing or malformed
+        at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+        at SMTPConnection._actionRCPT (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1737:24)
+        at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1715:22)
+        at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+        at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+        at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+        at TLSSocket.emit (node:events:524:28)
+        at addChunk (node:internal/streams/readable:561:12)
+        at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+        at Readable.push (node:internal/streams/readable:392:5) {
+      code: 'EENVELOPE',
+      response: '501 <belyndapaca@gmail..com>: domain missing or malformed',
+      responseCode: 501,
+      command: 'RCPT TO',
+      recipient: 'belyndapaca@gmail..com'
+    }
+  ]
+}
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ crearVenta: Error: Stock insuficiente para IPHONE 12 PRO MAX 100%
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: No hay caja abierta
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1130:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ crearVenta: Error: IMEI no disponible: 359618840040592
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 359618840040592
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para Cable USB TIPO C
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ crearVenta: Error: Stock insuficiente para INFINIX NOTE 60 PRO C / P
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 868870073464981
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 868870073464981
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para SAMSUNG A17 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para SAMSUNG A17 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para SAMSUNG A17 / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: No hay caja abierta
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1130:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: No hay caja abierta
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1130:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: No hay caja abierta
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1130:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 350711502018821
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 356034751591628
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X5 b
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarComprobantePdfPorCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: Stock insuficiente para HONOR X8d / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: Stock insuficiente para RAMITECH / AZUL
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para RAMITECH / AZUL
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: No hay caja abierta
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1130:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: No hay caja abierta
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1130:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ crearVenta: Error: IMEI no disponible: 351389361369665
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ dashboardContable: Error: write ECONNRESET
+    at PromisePool.query (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/mysql2/lib/promise/pool.js:36:22)
+    at exports.dashboardContable (/home/connectri4/app.connectriobamba.com/api/controllers/contabilidad.controller.js:293:37)
+    at Layer.handleRequest (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/lib/layer.js:152:17)
+    at next (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/lib/route.js:157:13)
+    at /home/connectri4/app.connectriobamba.com/api/middlewares/auth.middleware.js:54:7
+    at Layer.handleRequest (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/lib/layer.js:152:17)
+    at next (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/lib/route.js:117:3)
+    at handle (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/router/lib/layer.js:152:17) {
+  code: 'ECONNRESET',
+  errno: -104,
+  sql: undefined,
+  sqlState: undefined,
+  sqlMessage: undefined
+}
+❌ crearVenta: Error: Stock insuficiente para HONOR X5C PLUS C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C  / C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarComprobantePdfPorCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: Stock insuficiente para CAMON 30S / M
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarComprobantePdfPorCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ enviarComprobantePdfPorCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ enviarComprobantePdfPorCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ crearVenta: Error: Stock insuficiente para HONOR X5C PLUS C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1180:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 351389361370994
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: IMEI no disponible: 351389361370994
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1198:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ enviarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async enviarFacturaFirmadaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:421:24)
+    at async enviarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:364:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: No se pudo conectar con el SRI: fetch failed
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at soapRequest (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:262:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:533:24)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ firmarXmlFactura: Error: El archivo del certificado no existe en la ruta indicada. Ruta guardada: /Users/alexsandoval/SISTEMAS/connect/api/uploads/sri-certificados/certificado_1781708003756.p12
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:126:11)
+    at extractPkcs12Material (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:66:26)
+    at firmarFacturaXmlDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:178:61)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async firmarXmlFacturaHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:329:18) {
+  status: 400
+}
+❌ crearVenta: Error: Stock insuficiente para Galaxy A07 / C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1205:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ firmarXmlFactura: Error: El archivo del certificado no existe en la ruta indicada. Ruta guardada: /Users/alexsandoval/SISTEMAS/connect/api/uploads/sri-certificados/certificado_1781708003756.p12
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:126:11)
+    at extractPkcs12Material (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:66:26)
+    at firmarFacturaXmlDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-firma.service.js:178:61)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async firmarXmlFacturaHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:329:18) {
+  status: 400
+}
+❌ guardarConfiguracionSri: Error: El archivo del certificado no existe en la ruta indicada. Ruta guardada: /Users/alexsandoval/SISTEMAS/connect/api/uploads/sri-certificados/certificado_1781708003756.p12
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:126:11)
+    at saveSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:477:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async guardarConfigHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:242:18) {
+  status: 400
+}
+❌ guardarConfiguracionSri: Error: El archivo del certificado no existe en la ruta indicada. Ruta guardada: /Users/alexsandoval/SISTEMAS/connect/api/uploads/sri-certificados/certificado_1781708003756.p12
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:126:11)
+    at saveSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:477:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async guardarConfigHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:242:18) {
+  status: 400
+}
+❌ guardarConfiguracionSri: Error: El archivo del certificado no existe en la ruta indicada. Ruta guardada: /Users/alexsandoval/SISTEMAS/connect/api/uploads/sri-certificados/certificado_1781708003756.p12
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:126:11)
+    at saveSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:477:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async guardarConfigHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:242:18) {
+  status: 400
+}
+❌ guardarConfiguracionSri: Error: El archivo del certificado no existe en la ruta indicada. Ruta guardada: /home/connectri4/app.connectriobamba.com/api/uploads/sri-certificados/certificado_1781708003756.p12
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:126:11)
+    at saveSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:477:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async guardarConfigHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:242:18) {
+  status: 400
+}
+❌ guardarConfiguracionSri: Error: El archivo del certificado no existe en la ruta indicada. Ruta guardada: /Users/alexsandoval/SISTEMAS/connect/api/uploads/sri-certificados/certificado_1781708003756.p12
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveCertificatePath (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:126:11)
+    at saveSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:477:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async guardarConfigHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:242:18) {
+  status: 400
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ obtenerConfiguracionSriPruebas: Error: El local indicado no existe
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveSriContext (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:366:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async getSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:410:19)
+    at async exports.obtenerConfiguracionSriPruebas (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:209:18) {
+  status: 400
+}
+❌ obtenerConfiguracionSriPruebas: Error: El local indicado no existe
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveSriContext (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:366:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async getSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:410:19)
+    at async exports.obtenerConfiguracionSriPruebas (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:209:18) {
+  status: 400
+}
+❌ obtenerConfiguracionSriPruebas: Error: El local indicado no existe
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveSriContext (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:366:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async getSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:410:19)
+    at async exports.obtenerConfiguracionSriPruebas (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:209:18) {
+  status: 400
+}
+❌ obtenerConfiguracionSriPruebas: Error: El local indicado no existe
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveSriContext (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:366:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async getSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:410:19)
+    at async exports.obtenerConfiguracionSriPruebas (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:209:18) {
+  status: 400
+}
+❌ obtenerConfiguracionSriPruebas: Error: El local indicado no existe
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at resolveSriContext (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:366:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async getSriConfig (/home/connectri4/app.connectriobamba.com/api/services/sri-config.service.js:410:19)
+    at async exports.obtenerConfiguracionSriPruebas (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:209:18) {
+  status: 400
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ enviarFacturaSriCorreo: Error: Invalid login: 535 Incorrect authentication data
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1673:34)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)
+    at TLSSocket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5) {
+  code: 'EAUTH',
+  response: '535 Incorrect authentication data',
+  responseCode: 535,
+  command: 'AUTH PLAIN'
+}
+❌ crearVenta: Error: Stock insuficiente para INFINIX HOT 70 / C / N
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1205:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ crearVenta: Error: Stock insuficiente para HONOR X6C / C / A
+    at exports.crearVenta (/home/connectri4/app.connectriobamba.com/api/controllers/ventas.controller.js:1205:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:401:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:404:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:404:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:404:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:404:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:404:18) {
+  status: 502
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:404:18) {
+  status: 502
+}
+❌ enviarFacturaSriCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ enviarComprobantePdfPorCorreo: Error: No recipients defined
+    at SMTPConnection._formatError (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:865:19)
+    at SMTPConnection._setEnvelope (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1104:34)
+    at SMTPConnection.send (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:679:14)
+    at sendMessage (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:217:28)
+    at /home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-transport/index.js:275:25
+    at SMTPConnection._actionAUTHComplete (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1687:9)
+    at SMTPConnection.<anonymous> (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:604:26)
+    at SMTPConnection._processResponse (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:1050:20)
+    at SMTPConnection._onData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:825:14)
+    at SMTPConnection._onSocketData (/home/connectri4/nodevenv/app.connectriobamba.com/api/20/lib/node_modules/nodemailer/lib/smtp-connection/index.js:195:44) {
+  code: 'EENVELOPE',
+  command: 'API'
+}
+❌ autorizarFacturaSri: Error: El SRI respondio HTTP 302 en autorizacion. Redireccion: https://181.113.227.222. Intenta consultar nuevamente en unos minutos.
+    at createError (/home/connectri4/app.connectriobamba.com/api/services/sri-certificado.service.js:8:17)
+    at assertSoapHttpOk (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:261:9)
+    at consultarAutorizacionFacturaSriDesdeVenta (/home/connectri4/app.connectriobamba.com/api/services/sri-ws.service.js:574:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async autorizarFacturaSriHandler (/home/connectri4/app.connectriobamba.com/api/controllers/sri.controller.js:404:18) {
+  status: 502
+}

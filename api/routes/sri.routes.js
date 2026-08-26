@@ -95,6 +95,13 @@ router.post(
 );
 
 router.post(
+  "/facturas/:id_venta/reintentar",
+  auth(["CAJA", "ADMIN"]),
+  express.json(),
+  sriCtrl.encolarReintentoSri
+);
+
+router.post(
   "/pruebas/certificado/probar",
   uploadCertificadoJson,
   sriCtrl.probarCertificado
@@ -135,6 +142,12 @@ router.post(
   "/pruebas/facturas/:id_venta/email",
   express.json(),
   sriCtrl.enviarFacturaSriCorreoPruebas
+);
+
+router.post(
+  "/pruebas/facturas/:id_venta/reintentar",
+  express.json(),
+  sriCtrl.encolarReintentoSriPruebas
 );
 
 module.exports = router;

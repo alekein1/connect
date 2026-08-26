@@ -422,11 +422,12 @@ function generateRidePdfBuffer(venta) {
 
     const columns = [
       { key: "codigo", label: "COD.", width: 72 },
-      { key: "descripcion", label: "DESCRIPCION", width: 196 },
+      { key: "descripcion", label: "DESCRIPCION", width: 166 },
       { key: "cantidad", label: "CANT.", width: 44 },
       { key: "precio", label: "P. UNIT", width: 64 },
+      { key: "descuento", label: "DESC.", width: 56 },
       { key: "subtotal", label: "SUBTOTAL", width: 66 },
-      { key: "total", label: "TOTAL", width: 68 }
+      { key: "total", label: "TOTAL", width: 62 }
     ];
 
     const drawTableHeader = (headerY) => {
@@ -480,6 +481,7 @@ function generateRidePdfBuffer(venta) {
         descripcion,
         cantidad: cantidad.toFixed(2),
         precio: formatMoney(precioUnitario),
+        descuento: formatMoney(Number(item.descuento_unitario || 0) * cantidad),
         subtotal: formatMoney(subtotal),
         total: formatMoney(total)
       };
@@ -544,7 +546,6 @@ function generateRidePdfBuffer(venta) {
 
     const totals = [
       ["Subtotal", formatMoney(venta.subtotal)],
-      ["Descuento", formatMoney(venta.descuento)],
       ["IVA", formatMoney(venta.impuesto)],
       ["Total", formatMoney(venta.total)]
     ];

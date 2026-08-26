@@ -14,6 +14,9 @@ const {
   generarFacturaXmlDesdeVenta
 } = require("../services/sri-factura.service");
 const {
+  encolarReintentoSri
+} = require("../services/sri-reintento.service");
+const {
   firmarFacturaXmlDesdeVenta
 } = require("../services/sri-firma.service");
 const {
@@ -502,4 +505,44 @@ exports.enviarFacturaSriCorreo = async (req, res) => {
 
 exports.enviarFacturaSriCorreoPruebas = async (req, res) => {
   return enviarFacturaSriCorreoHandler(req, res, "public");
+};
+
+async function encolarReintentoSriHandler(req, res, source = "auth") {
+  try {
+    const idVenta = Number(req.params?.id_venta || req.body?.id_venta || 0);
+
+    if (!idVenta) {
+      throw createError("Debes indicar un id_venta válido");
+    }
+
+    const data = await encolarReintentoSri({
+      id_venta: idVenta,
+      paso: req.body?.paso || "xml",
+      motivo: req.body?.motivo || null,
+      payload: {
+        correo_destino: req.body?.correo_destino || null,
+        origen: source
+      }
+    });
+
+    res.json({
+      ok: true,
+      mensaje: "Reintento SRI programado correctamente",
+      data
+    });
+  } catch (error) {
+    console.error("❌ encolarReintentoSri:", error);
+    res.status(error.status || 500).json({
+      ok: false,
+      mensaje: error.message || "Error al programar reintento SRI"
+    });
+  }
+}
+
+exports.encolarReintentoSri = async (req, res) => {
+  return encolarReintentoSriHandler(req, res, "auth");
+};
+
+exports.encolarReintentoSriPruebas = async (req, res) => {
+  return encolarReintentoSriHandler(req, res, "public");
 };

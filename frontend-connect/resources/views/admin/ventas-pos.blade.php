@@ -701,6 +701,7 @@
                             <select id="proveedorFinanciamiento" class="select-pro">
                                 <option value="PAYJOY">PAYJOY</option>
                                 <option value="HAPPY">HAPPY</option>
+                                <option value="GOPHONE">GOPHONE</option>
                             </select>
                         </div>
                     </div>
@@ -1627,9 +1628,14 @@ function mensajeSriParaCaja(error, fallback = "La factura quedó pendiente de au
         normalized.includes("NO RESPONDIO") ||
         normalized.includes("TIMEOUT") ||
         normalized.includes("ECONNRESET") ||
-        normalized.includes("ETIMEDOUT")
+        normalized.includes("ETIMEDOUT") ||
+        normalized.includes("BAD GATEWAY") ||
+        normalized.includes("502") ||
+        normalized.includes("504") ||
+        normalized.includes("RESPUESTA DEL SERVIDOR NO FUE VÁLIDA") ||
+        normalized.includes("RESPUESTA DEL SERVIDOR NO FUE VALIDA")
     ) {
-        return "El SRI no está respondiendo correctamente en este momento. La venta quedó guardada; consulta la autorización más tarde.";
+        return "El SRI no está respondiendo correctamente en este momento. La venta quedó guardada y el sistema seguirá intentando en segundo plano.";
     }
 
     if (normalized.includes("CLAVE ACCESO REGISTRADA")) {
@@ -1637,6 +1643,65 @@ function mensajeSriParaCaja(error, fallback = "La factura quedó pendiente de au
     }
 
     return raw || fallback;
+}
+
+function esErrorSriTransitorio(error) {
+    const raw = String(error?.message || error || "");
+    const normalized = raw.toUpperCase();
+
+    return [
+        "HTTP 302",
+        "FETCH FAILED",
+        "NO SE PUDO CONECTAR",
+        "NO RESPONDIO",
+        "TIMEOUT",
+        "ECONNRESET",
+        "ETIMEDOUT",
+        "BAD GATEWAY",
+        "502",
+        "504",
+        "RESPUESTA DEL SERVIDOR NO FUE VÁLIDA",
+        "RESPUESTA DEL SERVIDOR NO FUE VALIDA",
+        "CLAVE ACCESO REGISTRADA"
+    ].some((pattern) => normalized.includes(pattern));
+}
+
+async function programarReintentoSriServidor(idVenta, paso, correoDestino = "", motivo = "") {
+    try {
+        await postSriSilencioso(idVenta, "reintentar", {
+            paso,
+            correo_destino: correoDestino || undefined,
+            motivo: motivo || undefined
+        });
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+async function devolverSriPendiente(idVenta, paso, correoDestino, error, popupWindow) {
+    if (popupWindow && !popupWindow.closed) {
+        popupWindow.close();
+    }
+
+    const programado = await programarReintentoSriServidor(
+        idVenta,
+        paso,
+        correoDestino,
+        error?.message || error || ""
+    );
+
+    if (programado) {
+        programarConsultaAutorizacionSri(idVenta);
+    }
+
+    return {
+        estado: "PENDIENTE",
+        mensaje: programado
+            ? mensajeSriParaCaja(error)
+            : "Venta guardada. No se pudo programar el reintento automatico; revisa la factura en el modulo SRI.",
+        reintentarAutorizacion: programado
+    };
 }
 
 const sriAutorizacionesProgramadas = new Set();
@@ -1707,10 +1772,35 @@ function programarConsultaAutorizacionSri(idVenta) {
 }
 
 async function procesarSriVenta(idVenta, correoDestino, popupWindow) {
-    await postSri(idVenta, "xml", null, "Generando XML...");
-    await postSri(idVenta, "firmar", null, "Firmando...");
+    try {
+        await postSri(idVenta, "xml", null, "Generando XML...");
+    } catch (error) {
+        if (esErrorSriTransitorio(error)) {
+            return devolverSriPendiente(idVenta, "xml", correoDestino, error, popupWindow);
+        }
+        throw error;
+    }
 
-    const envio = await postSri(idVenta, "enviar", null, "Enviando al SRI...");
+    try {
+        await postSri(idVenta, "firmar", null, "Firmando...");
+    } catch (error) {
+        if (esErrorSriTransitorio(error)) {
+            return devolverSriPendiente(idVenta, "firmar", correoDestino, error, popupWindow);
+        }
+        throw error;
+    }
+
+    let envio = null;
+
+    try {
+        envio = await postSri(idVenta, "enviar", null, "Enviando al SRI...");
+    } catch (error) {
+        if (esErrorSriTransitorio(error)) {
+            return devolverSriPendiente(idVenta, "enviar", correoDestino, error, popupWindow);
+        }
+        throw error;
+    }
+
     const envioEstado = envio?.data?.estado;
     const envioCodigo = String(envio?.data?.error_codigo || "");
     const envioDetalle = envio?.data?.error_detalle || envio?.mensaje || "";
@@ -1724,17 +1814,17 @@ async function procesarSriVenta(idVenta, correoDestino, popupWindow) {
     try {
         autorizacion = await postSri(idVenta, "autorizar", null, "Consultando autorización...");
     } catch (error) {
-        return {
-            estado: "PENDIENTE",
-            mensaje: mensajeSriParaCaja(error),
-            reintentarAutorizacion: true
-        };
+        if (esErrorSriTransitorio(error)) {
+            return devolverSriPendiente(idVenta, "autorizar", correoDestino, error, popupWindow);
+        }
+        throw error;
     }
 
     if (autorizacion?.data?.pendiente_autorizacion) {
         if (popupWindow && !popupWindow.closed) {
             popupWindow.close();
         }
+        await programarReintentoSriServidor(idVenta, "autorizar", correoDestino, "El SRI aun no devuelve autorizacion");
         return {
             estado: "PENDIENTE",
             mensaje: "Factura enviada al SRI, aún en proceso",
@@ -1761,7 +1851,19 @@ async function procesarSriVenta(idVenta, correoDestino, popupWindow) {
     }
 
     if (!email?.data?.ride_url) {
-        ride = await postSri(idVenta, "ride", null, "Generando RIDE...");
+        try {
+            ride = await postSri(idVenta, "ride", null, "Generando RIDE...");
+        } catch (error) {
+            if (esErrorSriTransitorio(error)) {
+                await programarReintentoSriServidor(idVenta, "ride", correoDestino, error.message || "");
+                return {
+                    estado: "PENDIENTE",
+                    mensaje: "Factura autorizada. El RIDE se generará automáticamente en segundo plano.",
+                    reintentarAutorizacion: true
+                };
+            }
+            throw error;
+        }
     }
 
     const rideUrl = email?.data?.ride_url || ride?.data?.ride_url || "";

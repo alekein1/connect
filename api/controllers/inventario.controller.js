@@ -1,5 +1,10 @@
 const bcrypt = require("bcryptjs");
 const db = require("../db/db");
+const {
+  copiarCodigosBarrasProducto,
+  ensureLocalBarcodeUniqueness,
+  ensureProductBarcodeAliasesTable
+} = require("../services/product-barcode-alias.service");
 const { buildProductSearchClause } = require("../services/product-search.service");
 
 function normalizarImei(valor = "") {
@@ -145,8 +150,8 @@ async function generarCodigoBarrasUnico(connection, idLocal) {
   for (let intento = 0; intento < 10; intento++) {
     const codigo = generarCodigoBarrasBase(idLocal);
     const [[existe]] = await connection.query(
-      `SELECT id_producto FROM productos WHERE codigo_barras = ? LIMIT 1`,
-      [codigo]
+      `SELECT id_producto FROM productos WHERE id_local = ? AND codigo_barras = ? LIMIT 1`,
+      [idLocal, codigo]
     );
 
     if (!existe) {
@@ -228,6 +233,8 @@ async function asegurarSubcategoriaDestino(connection, idCategoriaDestino, nombr
 }
 
 async function asegurarProductoDestino(connection, productoOrigen, idLocalDestino) {
+  await ensureProductBarcodeAliasesTable(connection);
+
   const idCategoriaDestino = await asegurarCategoriaDestino(
     connection,
     idLocalDestino,
@@ -242,25 +249,37 @@ async function asegurarProductoDestino(connection, productoOrigen, idLocalDestin
 
   const [[productoDestino]] = await connection.query(
     `
-    SELECT id_producto, activo
-    FROM productos
-    WHERE id_local = ?
-      AND id_subcategoria = ?
-      AND nombre_producto = ?
-      AND marca <=> ?
-      AND color <=> ?
-      AND capacidad <=> ?
-      AND estado <=> ?
+    SELECT DISTINCT p.id_producto, p.activo
+    FROM productos p
+    LEFT JOIN producto_codigos_barras pcb
+      ON pcb.id_producto = p.id_producto
+    WHERE p.id_local = ?
+      AND (
+        p.codigo_barras = ?
+        OR pcb.codigo_barras = ?
+        OR (
+          p.id_subcategoria = ?
+          AND p.nombre_producto = ?
+          AND p.marca <=> ?
+          AND p.color <=> ?
+          AND p.capacidad <=> ?
+          AND p.estado <=> ?
+        )
+      )
+    ORDER BY CASE WHEN p.codigo_barras = ? THEN 0 ELSE 1 END
     LIMIT 1
     `,
     [
       idLocalDestino,
+      productoOrigen.codigo_barras,
+      productoOrigen.codigo_barras,
       idSubcategoriaDestino,
       productoOrigen.nombre_producto,
       textoNullable(productoOrigen.marca),
       textoNullable(productoOrigen.color),
       textoNullable(productoOrigen.capacidad),
-      textoNullable(productoOrigen.estado)
+      textoNullable(productoOrigen.estado),
+      productoOrigen.codigo_barras
     ]
   );
 
@@ -278,7 +297,9 @@ async function asegurarProductoDestino(connection, productoOrigen, idLocalDestin
     };
   }
 
-  const codigoBarras = await generarCodigoBarrasUnico(connection, idLocalDestino);
+  const codigoBarras =
+    textoNullable(productoOrigen.codigo_barras) ||
+    (await generarCodigoBarrasUnico(connection, idLocalDestino));
   const sku = generarSkuBase(productoOrigen.nombre_producto, idLocalDestino);
 
   const [result] = await connection.query(
@@ -1068,6 +1089,7 @@ exports.traspasarProducto = async (req, res) => {
         p.precio_docena,
         p.stock_minimo,
         p.graba_iva,
+        p.codigo_barras,
         COALESCE(i.stock_actual, 0) AS stock_actual,
         s.nombre_subcategoria,
         c.nombre_categoria,
@@ -1118,6 +1140,9 @@ exports.traspasarProducto = async (req, res) => {
     let stockOrigen = null;
     let stockDestino = null;
 
+    // Debe ejecutarse antes de la transacción porque puede ajustar un índice antiguo.
+    await ensureLocalBarcodeUniqueness(connection);
+
     await connection.beginTransaction();
     transactionIniciada = true;
 
@@ -1125,6 +1150,14 @@ exports.traspasarProducto = async (req, res) => {
       connection,
       productoOrigen,
       idLocalDestino
+    );
+
+    // Las etiquetas viajan con el equipo: conserva su código al cambiar de local.
+    await copiarCodigosBarrasProducto(
+      connection,
+      idProductoOrigen,
+      productoDestinoInfo.id_producto,
+      productoOrigen.codigo_barras
     );
 
     stockOrigen = await asegurarStockProducto(
