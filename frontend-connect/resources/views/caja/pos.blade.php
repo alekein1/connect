@@ -765,7 +765,7 @@
 
 .preview-item-row{
     display:grid;
-    grid-template-columns:minmax(0, 1.5fr) 90px 110px 120px 150px 38px;
+    grid-template-columns:minmax(0, 1.3fr) 75px 90px 90px 95px 105px 140px 38px;
     gap:10px;
     align-items:center;
     padding:12px;
@@ -812,6 +812,26 @@
 
 .preview-row-note{
     color:#94a3b8;
+    font-size:12px;
+}
+
+.product-adjustments{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.product-adjustment-field{
+    display:grid;
+    grid-template-columns:auto 78px;
+    align-items:center;
+    gap:6px;
+    color:#94a3b8;
+    font-size:11px;
+}
+
+.product-adjustment-field .input-pro{
+    padding:7px 8px;
     font-size:12px;
 }
 
@@ -1011,10 +1031,6 @@
                                 <option value="FINANCIADO">Financiado</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="muted">Aumento por producto</label>
-                            <input id="recargoFinanciamiento" type="number" min="0" step="0.01" class="input-pro" placeholder="Ej: 5.00">
-                        </div>
                     </div>
 
                     <div id="financiamientoBox" class="grid-2 hidden" style="margin-top:12px;">
@@ -1031,13 +1047,14 @@
                             <select id="proveedorFinanciamiento" class="select-pro">
                                 <option value="PAYJOY">PAYJOY</option>
                                 <option value="HAPPY">HAPPY</option>
+                                <option value="GOPHONE">GOPHONE</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <div class="field">
-                    <p class="field-title">Pago y descuento</p>
+                    <p class="field-title">Pago</p>
                     <div class="payment-layout">
                         <div>
                             <label class="muted">Tipo de pago</label>
@@ -1050,16 +1067,6 @@
                         <div>
                             <label class="muted">Monto pago</label>
                             <input id="montoPago" class="input-pro" placeholder="Se calcula automáticamente" readonly>
-                        </div>
-                    </div>
-                    <div class="grid-2" style="margin-top:12px;">
-                        <div>
-                            <label class="muted">Descuento</label>
-                            <input id="descuentoInput" type="number" min="0" step="0.01" class="input-pro" placeholder="0.00">
-                        </div>
-                        <div>
-                            <label class="muted">Motivo descuento</label>
-                            <input id="motivoDescuentoInput" class="input-pro" placeholder="Motivo opcional">
                         </div>
                     </div>
                 </div>
@@ -1167,10 +1174,6 @@
                                 <option value="FINANCIADO">Financiado</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="muted">Aumento por producto</label>
-                            <input id="previewRecargoFinanciamiento" type="number" min="0" step="0.01" class="input-pro" placeholder="Ej: 5.00">
-                        </div>
                     </div>
 
                     <div id="previewFinanciamientoBox" class="preview-grid-2 hidden" style="margin-top:12px;">
@@ -1187,6 +1190,7 @@
                             <select id="previewProveedorFinanciamiento" class="select-pro">
                                 <option value="PAYJOY">PAYJOY</option>
                                 <option value="HAPPY">HAPPY</option>
+                                <option value="GOPHONE">GOPHONE</option>
                             </select>
                         </div>
                     </div>
@@ -1206,22 +1210,12 @@
                         </div>
                     </div>
 
-                    <div class="preview-grid-2" style="margin-top:12px;">
-                        <div>
-                            <label class="muted">Descuento</label>
-                            <input id="previewDescuento" type="number" min="0" step="0.01" class="input-pro" placeholder="0.00">
-                        </div>
-                        <div>
-                            <label class="muted">Motivo descuento</label>
-                            <input id="previewMotivoDescuento" class="input-pro" placeholder="Motivo opcional">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="preview-card">
                     <div class="preview-card-head">
                         <p class="field-title" style="margin:0;">Productos</p>
-                        <span class="preview-helper">Puedes ajustar cantidad, IMEI y quitar filas antes de aprobar.</span>
+                        <span class="preview-helper">Ajusta cantidad, descuento o aumento de cada producto antes de aprobar.</span>
                     </div>
                     <div id="previewItemsList" class="preview-items-list"></div>
                 </div>
@@ -1278,6 +1272,7 @@ const API_BASE = String(API || "").replace(/\/api\/?$/, "");
 const IMG = `${API_BASE}/api/uploads/productos/`;
 const TOKEN = localStorage.getItem("token");
 const LAST_SALE_KEY = "pos_web_last_sale";
+const MIN_POS_SEARCH_CHARS = 1;
 
 if (!TOKEN) {
     window.location.href = "/login";
@@ -1287,6 +1282,9 @@ let carrito = [];
 let resultadosBusqueda = [];
 let cajaActual = null;
 let ventaPreviewState = null;
+let ultimaBusquedaPOS = "";
+let busquedaEscanerTimeout = null;
+let busquedaEscanerVersion = 0;
 
 const inputBuscar = document.getElementById("inputBuscar");
 const btnBuscarManual = document.getElementById("btnBuscarManual");
@@ -1302,14 +1300,11 @@ const clienteDireccion = document.getElementById("clienteDireccion");
 const clienteTelefono = document.getElementById("clienteTelefono");
 const tipoVentaSelect = document.getElementById("tipoVenta");
 const financiamientoBox = document.getElementById("financiamientoBox");
-const recargoFinanciamientoInput = document.getElementById("recargoFinanciamiento");
 const entradaFinanciamientoInput = document.getElementById("entradaFinanciamiento");
 const cuotasFinanciamientoInput = document.getElementById("cuotasFinanciamiento");
 const proveedorFinanciamientoSelect = document.getElementById("proveedorFinanciamiento");
 const pagoSelect = document.getElementById("formaPago");
 const montoInput = document.getElementById("montoPago");
-const descuentoInput = document.getElementById("descuentoInput");
-const motivoDescuentoInput = document.getElementById("motivoDescuentoInput");
 const btnVentaNormal = document.getElementById("btnVentaNormal");
 const btnCredito = document.getElementById("btnCredito");
 const btnSri = document.getElementById("btnSri");
@@ -1338,15 +1333,12 @@ const previewClienteCorreo = document.getElementById("previewClienteCorreo");
 const previewClienteTelefono = document.getElementById("previewClienteTelefono");
 const previewClienteDireccion = document.getElementById("previewClienteDireccion");
 const previewTipoVenta = document.getElementById("previewTipoVenta");
-const previewRecargoFinanciamiento = document.getElementById("previewRecargoFinanciamiento");
 const previewFinanciamientoBox = document.getElementById("previewFinanciamientoBox");
 const previewEntradaFinanciamiento = document.getElementById("previewEntradaFinanciamiento");
 const previewCuotasFinanciamiento = document.getElementById("previewCuotasFinanciamiento");
 const previewProveedorFinanciamiento = document.getElementById("previewProveedorFinanciamiento");
 const previewFormaPago = document.getElementById("previewFormaPago");
 const previewMontoPago = document.getElementById("previewMontoPago");
-const previewDescuento = document.getElementById("previewDescuento");
-const previewMotivoDescuento = document.getElementById("previewMotivoDescuento");
 const previewItemsList = document.getElementById("previewItemsList");
 const previewResumenSubtotal = document.getElementById("previewResumenSubtotal");
 const previewResumenDescuento = document.getElementById("previewResumenDescuento");
@@ -1539,6 +1531,7 @@ function buildTicketHtml(payload) {
                     ${escapeHtml(item.codigo || "")}<br>
                     ${escapeHtml(item.nombre || "")}
                     ${item.imei ? `<br>IMEI: ${escapeHtml(item.imei)}` : ""}
+                    ${Number(item.descuento || 0) > 0 ? `<br>Descuento: $${Number(item.descuento).toFixed(2)} c/u` : ""}
                 </td>
                 <td class="qty">${escapeHtml(String(item.cantidad || 0))}</td>
                 <td class="money">${Number(item.precio || 0).toFixed(2)}</td>
@@ -1691,33 +1684,43 @@ function renderTicketPopup(popup, payload) {
 }
 
 function obtenerPrecioVigente(item) {
-    if (item.precioEditado) {
-        return Number(item.precio || 0);
-    }
+    const precioBase = Math.max(0, Number(item.precioBase || 0));
+    const aumento = Math.max(0, Number(item.aumentoPorProducto || 0));
+    const descuento = Math.min(
+        Math.max(0, Number(item.descuentoPorProducto || 0)),
+        precioBase + aumento
+    );
 
-    return Number((Number(item.precioBase || 0) + obtenerRecargoFinanciamiento()).toFixed(2));
+    return Number(Math.max(0, precioBase + aumento - descuento).toFixed(2));
 }
 
-function obtenerSubtotalCarrito() {
-    return carrito.reduce((acc, item) => acc + (obtenerPrecioVigente(item) * Number(item.cantidad || 0)), 0);
-}
+function obtenerTotalesProductos(items = carrito) {
+    const totals = items.reduce((acc, item) => {
+        const cantidad = Math.max(1, Number(item.cantidad || 1));
+        const precioBase = Math.max(0, Number(item.precioBase || 0));
+        const aumento = Math.max(0, Number(item.aumentoPorProducto || 0));
+        const descuento = Math.min(
+            Math.max(0, Number(item.descuentoPorProducto || 0)),
+            precioBase + aumento
+        );
 
-function obtenerDescuentoActual(subtotal) {
-    const descuento = Number(descuentoInput.value || 0);
-    if (!Number.isFinite(descuento) || descuento <= 0) {
-        return 0;
-    }
-    return Math.min(descuento, subtotal);
-}
+        acc.subtotal += (precioBase + aumento) * cantidad;
+        acc.descuento += descuento * cantidad;
+        acc.total += obtenerPrecioVigente(item) * cantidad;
+        return acc;
+    }, { subtotal: 0, descuento: 0, total: 0 });
 
-function obtenerRecargoFinanciamiento() {
-    const recargo = Number(recargoFinanciamientoInput.value || 0);
-    return Number.isFinite(recargo) && recargo > 0 ? recargo : 0;
+    return Object.fromEntries(
+        Object.entries(totals).map(([key, value]) => [key, Number(value.toFixed(2))])
+    );
 }
 
 function limpiarBusqueda() {
+    clearTimeout(busquedaEscanerTimeout);
+    busquedaEscanerVersion += 1;
     inputBuscar.value = "";
     resultadosBusqueda = [];
+    ultimaBusquedaPOS = "";
     dropdownResultados.innerHTML = "";
     dropdownResultados.style.display = "none";
 }
@@ -1728,13 +1731,13 @@ function cambiarCantidad(index, value) {
     render();
 }
 
-function cambiarPrecio(index, value) {
-    const precio = Number(value);
-    if (!Number.isFinite(precio) || precio < 0) {
+function cambiarAjusteProducto(index, campo, value) {
+    const monto = Number(value);
+    if (!Number.isInteger(index) || !carrito[index] || !Number.isFinite(monto) || monto < 0) {
         return;
     }
-    carrito[index].precio = precio;
-    carrito[index].precioEditado = true;
+
+    carrito[index][campo] = monto;
     render();
 }
 
@@ -1757,8 +1760,8 @@ function agregarProducto(producto) {
             id_producto: producto.id_producto,
             nombre: producto.nombre_producto,
             precioBase: Number(producto.precio_unitario || 0),
-            precio: Number(producto.precio_unitario || 0),
-            precioEditado: false,
+            descuentoPorProducto: 0,
+            aumentoPorProducto: 0,
             cantidad: 1,
             imei: producto.imei_encontrado || null,
             imeis: producto.imeis || "",
@@ -1808,7 +1811,6 @@ function render() {
     } else {
         detalleVenta.innerHTML = carrito.map((item, index) => {
             const precioVigente = obtenerPrecioVigente(item);
-            item.precio = precioVigente;
             const subtotal = Number((precioVigente * Number(item.cantidad || 0)).toFixed(2));
             const imeis = String(item.imeis || "")
                 .split(",")
@@ -1833,6 +1835,16 @@ function render() {
                                                     : "Sin IMEI registrado"
                                         }
                                     </span>
+                                    <div class="product-adjustments">
+                                        <label class="product-adjustment-field">
+                                            <span>Descuento</span>
+                                            <input class="input-pro" type="number" min="0" step="0.01" value="${Number(item.descuentoPorProducto || 0).toFixed(2)}" onchange="cambiarAjusteProducto(${index}, 'descuentoPorProducto', this.value)">
+                                        </label>
+                                        <label class="product-adjustment-field">
+                                            <span>Aumento</span>
+                                            <input class="input-pro" type="number" min="0" step="0.01" value="${Number(item.aumentoPorProducto || 0).toFixed(2)}" onchange="cambiarAjusteProducto(${index}, 'aumentoPorProducto', this.value)">
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <button type="button" class="btn-delete" onclick="eliminarProducto(${index})">✕</button>
@@ -1842,11 +1854,7 @@ function render() {
                         <input class="input-pro" type="number" min="1" step="1" value="${Number(item.cantidad || 1)}" onchange="cambiarCantidad(${index}, this.value)">
                     </td>
                     <td>
-                        ${
-                            tipoVentaSelect.value === "FINANCIADO"
-                                ? `<input class="input-pro" type="number" min="0" step="0.01" value="${precioVigente.toFixed(2)}" onchange="cambiarPrecio(${index}, this.value)">`
-                                : `<strong>${money(precioVigente)}</strong>`
-                        }
+                        <strong>${money(precioVigente)}</strong>
                     </td>
                     <td><strong>${money(subtotal)}</strong></td>
                     <td>
@@ -1872,9 +1880,8 @@ function render() {
         }).join("");
     }
 
-    const subtotal = Number(obtenerSubtotalCarrito().toFixed(2));
-    const descuento = Number(obtenerDescuentoActual(subtotal).toFixed(2));
-    const total = Number((subtotal - descuento).toFixed(2));
+    const totals = obtenerTotalesProductos();
+    const { subtotal, descuento, total } = totals;
     const entrada = tipoVentaSelect.value === "FINANCIADO"
         ? Number(Math.max(Number(entradaFinanciamientoInput.value || 0), 0).toFixed(2))
         : total;
@@ -1911,43 +1918,22 @@ function buildVentaPreviewState(modoVenta = "NORMAL") {
             telefono: clienteTelefono.value.trim()
         },
         tipoVenta: tipoVentaSelect.value || "CONTADO",
-        recargo: recargoFinanciamientoInput.value || "",
         entrada: entradaFinanciamientoInput.value || "",
         cuotas: cuotasFinanciamientoInput.value || "",
         proveedor: proveedorFinanciamientoSelect.value || "PAYJOY",
         formaPago: pagoSelect.value || "EFECTIVO",
-        descuento: descuentoInput.value || "",
-        motivoDescuento: motivoDescuentoInput.value || "",
         items: carrito.map((item) => ({
             ...item
         }))
     };
 }
 
-function getPreviewRecargo(state) {
-    const recargo = Number(state?.recargo || 0);
-    return Number.isFinite(recargo) && recargo > 0 ? recargo : 0;
-}
-
-function getPreviewPrice(item, state) {
-    if (item.precioEditado) {
-        return Number(item.precio || 0);
-    }
-
-    return Number((Number(item.precioBase || 0) + getPreviewRecargo(state)).toFixed(2));
+function getPreviewPrice(item) {
+    return obtenerPrecioVigente(item);
 }
 
 function getPreviewTotals(state) {
-    const subtotal = Number(state.items.reduce((acc, item) => {
-        return acc + (getPreviewPrice(item, state) * Number(item.cantidad || 0));
-    }, 0).toFixed(2));
-
-    const descuento = Number(Math.min(
-        Math.max(Number(state.descuento || 0), 0),
-        subtotal
-    ).toFixed(2));
-
-    const total = Number((subtotal - descuento).toFixed(2));
+    const { subtotal, descuento, total } = obtenerTotalesProductos(state.items);
     const entrada = state.tipoVenta === "FINANCIADO"
         ? Number(Math.max(Number(state.entrada || 0), 0).toFixed(2))
         : total;
@@ -1980,7 +1966,7 @@ function renderVentaPreviewItems() {
     }
 
     previewItemsList.innerHTML = ventaPreviewState.items.map((item, index) => {
-        const precio = getPreviewPrice(item, ventaPreviewState);
+        const precio = getPreviewPrice(item);
         const subtotal = Number((precio * Number(item.cantidad || 0)).toFixed(2));
         const imeis = String(item.imeis || "")
             .split(",")
@@ -1998,12 +1984,16 @@ function renderVentaPreviewItems() {
                     <input type="number" min="1" step="1" class="input-pro preview-item-qty" data-preview-index="${index}" value="${Number(item.cantidad || 1)}">
                 </div>
                 <div>
-                    <span class="preview-mini-label">Precio</span>
-                    ${
-                        ventaPreviewState.tipoVenta === "FINANCIADO"
-                            ? `<input type="number" min="0" step="0.01" class="input-pro preview-item-price" data-preview-index="${index}" value="${precio.toFixed(2)}">`
-                            : `<div class="preview-line-total">${money(precio)}</div>`
-                    }
+                    <span class="preview-mini-label">Descuento</span>
+                    <input type="number" min="0" step="0.01" class="input-pro preview-item-discount" data-preview-index="${index}" value="${Number(item.descuentoPorProducto || 0).toFixed(2)}">
+                </div>
+                <div>
+                    <span class="preview-mini-label">Aumento</span>
+                    <input type="number" min="0" step="0.01" class="input-pro preview-item-increase" data-preview-index="${index}" value="${Number(item.aumentoPorProducto || 0).toFixed(2)}">
+                </div>
+                <div>
+                    <span class="preview-mini-label">Precio final</span>
+                    <div class="preview-line-total">${money(precio)}</div>
                 </div>
                 <div>
                     <span class="preview-mini-label">Subtotal</span>
@@ -2049,13 +2039,10 @@ function renderVentaPreview() {
 
     previewClienteCard.classList.toggle("hidden", !ventaPreviewState.esFactura);
     previewTipoVenta.value = ventaPreviewState.tipoVenta;
-    previewRecargoFinanciamiento.value = ventaPreviewState.recargo;
     previewEntradaFinanciamiento.value = ventaPreviewState.entrada;
     previewCuotasFinanciamiento.value = ventaPreviewState.cuotas;
     previewProveedorFinanciamiento.value = ventaPreviewState.proveedor;
     previewFormaPago.value = ventaPreviewState.formaPago || "EFECTIVO";
-    previewDescuento.value = ventaPreviewState.descuento;
-    previewMotivoDescuento.value = ventaPreviewState.motivoDescuento;
 
     previewClienteCedula.value = ventaPreviewState.cliente.cedula;
     previewClienteNombre.value = ventaPreviewState.cliente.nombres;
@@ -2116,12 +2103,9 @@ function applyVentaPreviewState() {
     clienteDireccion.value = ventaPreviewState.cliente.direccion || "";
 
     tipoVentaSelect.value = ventaPreviewState.tipoVenta;
-    recargoFinanciamientoInput.value = ventaPreviewState.recargo || "";
     entradaFinanciamientoInput.value = ventaPreviewState.entrada || "";
     cuotasFinanciamientoInput.value = ventaPreviewState.cuotas || "";
     proveedorFinanciamientoSelect.value = ventaPreviewState.proveedor || "PAYJOY";
-    descuentoInput.value = ventaPreviewState.descuento || "";
-    motivoDescuentoInput.value = ventaPreviewState.motivoDescuento || "";
 
     setTipoVenta(ventaPreviewState.tipoVenta);
     setFormaPago(ventaPreviewState.formaPago || "EFECTIVO");
@@ -2131,7 +2115,7 @@ function applyVentaPreviewState() {
 async function buscarProductosPOS(query) {
     const q = String(query || "").trim();
 
-    if (q.length < 2) {
+    if (q.length < MIN_POS_SEARCH_CHARS) {
         return [];
     }
 
@@ -2142,13 +2126,14 @@ async function buscarProductosPOS(query) {
 async function ejecutarBusquedaManual() {
     const q = inputBuscar.value.trim();
 
-    if (q.length < 2) {
-        showFeedback("Escribe al menos dos caracteres para buscar.", "error");
+    if (q.length < MIN_POS_SEARCH_CHARS) {
+        showFeedback("Escribe al menos una letra, nombre o código para buscar.", "error");
         return;
     }
 
     try {
         resultadosBusqueda = await buscarProductosPOS(q);
+        ultimaBusquedaPOS = q;
         renderDropdown();
         if (!resultadosBusqueda.length) {
             showFeedback("No se encontraron productos con ese criterio.", "error");
@@ -2243,9 +2228,11 @@ function obtenerValoresTributarios(dataVenta, totalFallback) {
     const subtotal = obtenerNumeroDesdeRespuesta(dataVenta, ["subtotal", "subtotal_0", "base_imponible"]) ?? totalFallback;
     const iva = obtenerNumeroDesdeRespuesta(dataVenta, ["iva", "impuesto", "impuestos", "valor_iva", "total_iva"]) ?? 0;
     const total = obtenerNumeroDesdeRespuesta(dataVenta, ["total", "total_venta", "importe_total"]) ?? Number((subtotal + iva).toFixed(2));
+    const descuento = obtenerNumeroDesdeRespuesta(dataVenta, ["descuento", "total_descuento"]) ?? 0;
 
     return {
         subtotal: Number(subtotal.toFixed(2)),
+        descuento: Number(descuento.toFixed(2)),
         iva: Number(iva.toFixed(2)),
         total: Number(total.toFixed(2))
     };
@@ -2296,14 +2283,11 @@ function resetFormularioVenta() {
 
     tipoVentaSelect.value = "CONTADO";
     setTipoVenta("CONTADO");
-    recargoFinanciamientoInput.value = "";
     entradaFinanciamientoInput.value = "";
     cuotasFinanciamientoInput.value = "";
     proveedorFinanciamientoSelect.value = "PAYJOY";
     setFormaPago("EFECTIVO");
     montoInput.value = "";
-    descuentoInput.value = "";
-    motivoDescuentoInput.value = "";
     setTipoComprobante(false);
     render();
 }
@@ -2330,6 +2314,7 @@ async function construirTicketPayload({
             cantidad: item.cantidad,
             precio: Number(item.precio_unitario ?? item.precio ?? 0),
             total: Number(item.subtotal ?? item.total ?? 0),
+            descuento: Number(item.descuento_unitario ?? 0),
             imei: item.imei || ""
         }))
         : carrito.map((item) => ({
@@ -2338,6 +2323,7 @@ async function construirTicketPayload({
             cantidad: item.cantidad,
             precio: obtenerPrecioVigente(item),
             total: obtenerPrecioVigente(item) * Number(item.cantidad || 0),
+            descuento: Number(item.descuentoPorProducto || 0),
             imei: item.imei || ""
         }));
 
@@ -2357,6 +2343,7 @@ async function construirTicketPayload({
         localDireccion: fuente?.local_direccion || "",
         localTelefono: fuente?.local_telefono || "",
         subtotal: valores.subtotal,
+        descuento: valores.descuento,
         iva: valores.iva,
         total: valores.total,
         entradaCredito,
@@ -2746,10 +2733,7 @@ async function crearVenta(modoVenta = "NORMAL") {
         const tipoVenta = tipoVentaSelect.value;
         const formaPago = pagoSelect.value || "EFECTIVO";
         const formaPagoLabel = getPaymentLabel(formaPago);
-        const aumentoPorProducto = obtenerRecargoFinanciamiento();
-        const subtotal = obtenerSubtotalCarrito();
-        const descuento = obtenerDescuentoActual(subtotal);
-        const total = Number((subtotal - descuento).toFixed(2));
+        const { subtotal, descuento, total } = obtenerTotalesProductos();
         const entradaFinanciamiento = Number(entradaFinanciamientoInput.value || 0);
         const cuotasFinanciamiento = Number(cuotasFinanciamientoInput.value || 0);
         const proveedorFinanciamiento = proveedorFinanciamientoSelect.value || "";
@@ -2781,14 +2765,14 @@ async function crearVenta(modoVenta = "NORMAL") {
                 imei: item.imei,
                 precio_unitario: obtenerPrecioVigente(item),
                 precio_final: obtenerPrecioVigente(item),
-                aumento_por_producto: aumentoPorProducto
+                descuento_por_producto: Number(item.descuentoPorProducto || 0),
+                aumento_por_producto: Number(item.aumentoPorProducto || 0)
             })),
             pagos,
             tipo_venta: tipoVenta,
             cliente,
-            descuento,
-            motivo_descuento: motivoDescuentoInput.value.trim() || null,
-            aumento_por_producto: aumentoPorProducto
+            descuento: 0,
+            motivo_descuento: null
         };
 
         if (tipoVenta === "FINANCIADO") {
@@ -2922,9 +2906,7 @@ async function crearVenta(modoVenta = "NORMAL") {
 btnConsumidor.addEventListener("click", () => setTipoComprobante(false));
 btnFactura.addEventListener("click", () => setTipoComprobante(true));
 tipoVentaSelect.addEventListener("change", (event) => setTipoVenta(event.target.value));
-recargoFinanciamientoInput.addEventListener("input", () => render());
 entradaFinanciamientoInput.addEventListener("input", () => render());
-descuentoInput.addEventListener("input", () => render());
 btnBuscarManual.addEventListener("click", ejecutarBusquedaManual);
 pagoSelect.addEventListener("change", (event) => setFormaPago(event.target.value || "EFECTIVO"));
 btnVentaNormal.addEventListener("click", () => openVentaPreview("NORMAL"));
@@ -2969,14 +2951,6 @@ previewTipoVenta.addEventListener("change", (event) => {
     renderVentaPreview();
 });
 
-previewRecargoFinanciamiento.addEventListener("change", (event) => {
-    if (!ventaPreviewState) {
-        return;
-    }
-    ventaPreviewState.recargo = event.target.value || "";
-    renderVentaPreview();
-});
-
 previewEntradaFinanciamiento.addEventListener("change", (event) => {
     if (!ventaPreviewState) {
         return;
@@ -3004,21 +2978,6 @@ previewFormaPago.addEventListener("change", (event) => {
         return;
     }
     ventaPreviewState.formaPago = event.target.value || "EFECTIVO";
-});
-
-previewDescuento.addEventListener("change", (event) => {
-    if (!ventaPreviewState) {
-        return;
-    }
-    ventaPreviewState.descuento = event.target.value || "";
-    renderVentaPreview();
-});
-
-previewMotivoDescuento.addEventListener("input", (event) => {
-    if (!ventaPreviewState) {
-        return;
-    }
-    ventaPreviewState.motivoDescuento = event.target.value || "";
 });
 
 previewClienteCedula.addEventListener("input", (event) => {
@@ -3056,10 +3015,16 @@ previewItemsList.addEventListener("change", (event) => {
         return;
     }
 
-    if (event.target.classList.contains("preview-item-price")) {
-        const precio = Number(event.target.value || 0);
-        item.precio = Number.isFinite(precio) && precio >= 0 ? precio : 0;
-        item.precioEditado = true;
+    if (event.target.classList.contains("preview-item-discount")) {
+        const descuento = Number(event.target.value || 0);
+        item.descuentoPorProducto = Number.isFinite(descuento) && descuento >= 0 ? descuento : 0;
+        renderVentaPreview();
+        return;
+    }
+
+    if (event.target.classList.contains("preview-item-increase")) {
+        const aumento = Number(event.target.value || 0);
+        item.aumentoPorProducto = Number.isFinite(aumento) && aumento >= 0 ? aumento : 0;
         renderVentaPreview();
         return;
     }
@@ -3090,27 +3055,63 @@ previewItemsList.addEventListener("click", (event) => {
 
 inputBuscar.addEventListener("input", async () => {
     const query = inputBuscar.value.trim();
+    clearTimeout(busquedaEscanerTimeout);
+    const versionBusqueda = ++busquedaEscanerVersion;
 
-    if (query.length < 2) {
+    if (query.length < MIN_POS_SEARCH_CHARS) {
         dropdownResultados.style.display = "none";
         resultadosBusqueda = [];
+        ultimaBusquedaPOS = "";
         return;
     }
 
-    try {
-        resultadosBusqueda = await buscarProductosPOS(query);
-        renderDropdown();
-    } catch (error) {
-        showFeedback(error.message || "No se pudo buscar productos.", "error");
+    // Algunos lectores solo escriben el código; esperamos el fin de la ráfaga
+    // y agregamos la coincidencia única sin depender de Enter o Tab.
+    busquedaEscanerTimeout = setTimeout(async () => {
+        try {
+            const resultados = await buscarProductosPOS(query);
+
+            if (versionBusqueda !== busquedaEscanerVersion || inputBuscar.value.trim() !== query) {
+                return;
+            }
+
+            resultadosBusqueda = resultados;
+            ultimaBusquedaPOS = query;
+            const soloDigitos = query.replace(/\D/g, "");
+            const esCodigoEscaneado = soloDigitos.length >= 8;
+
+            if (esCodigoEscaneado && resultadosBusqueda.length === 1) {
+                agregarProducto(resultadosBusqueda[0]);
+                limpiarBusqueda();
+                return;
+            }
+
+            renderDropdown();
+        } catch (error) {
+            if (versionBusqueda === busquedaEscanerVersion) {
+                showFeedback(error.message || "No se pudo buscar productos.", "error");
+            }
+        }
+    }, 180);
+});
+
+// Respaldo para lectores HID que escriben en el campo sin emitir input de forma fiable.
+inputBuscar.addEventListener("keyup", (event) => {
+    if (event.key === "Enter" || event.key === "Tab") {
+        return;
     }
+
+    inputBuscar.dispatchEvent(new Event("input", { bubbles: true }));
 });
 
 inputBuscar.addEventListener("keydown", async (event) => {
-    if (event.key !== "Enter") {
+    if (event.key !== "Enter" && event.key !== "Tab") {
         return;
     }
 
     event.preventDefault();
+    clearTimeout(busquedaEscanerTimeout);
+    busquedaEscanerVersion += 1;
     const query = inputBuscar.value.trim();
 
     if (!query) {
@@ -3118,13 +3119,16 @@ inputBuscar.addEventListener("keydown", async (event) => {
     }
 
     try {
-        if (!resultadosBusqueda.length) {
+        if (!resultadosBusqueda.length || ultimaBusquedaPOS !== query) {
             resultadosBusqueda = await buscarProductosPOS(query);
+            ultimaBusquedaPOS = query;
         }
 
         if (resultadosBusqueda.length) {
             agregarProducto(resultadosBusqueda[0]);
             limpiarBusqueda();
+        } else {
+            showFeedback(`No se encontró producto disponible para el código: ${query}`, "error");
         }
     } catch (error) {
         showFeedback(error.message || "No se pudo agregar el producto.", "error");
@@ -3148,7 +3152,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 window.cambiarCantidad = cambiarCantidad;
-window.cambiarPrecio = cambiarPrecio;
+window.cambiarAjusteProducto = cambiarAjusteProducto;
 window.setIMEI = setIMEI;
 window.eliminarProducto = eliminarProducto;
 

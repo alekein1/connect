@@ -6,22 +6,40 @@ let ensureVentaAnulacionSchemaPromise = null;
 async function ensureDetalleVentaImeiColumn() {
   if (!ensureDetalleVentaImeiColumnPromise) {
     ensureDetalleVentaImeiColumnPromise = (async () => {
-      const [[column]] = await db.query(
+      const [columns] = await db.query(
         `
         SELECT COLUMN_NAME
         FROM information_schema.COLUMNS
         WHERE TABLE_SCHEMA = DATABASE()
           AND TABLE_NAME = 'detalle_venta'
-          AND COLUMN_NAME = 'imei'
-        LIMIT 1
+          AND COLUMN_NAME IN ('imei', 'precio_lista_unitario', 'descuento_unitario')
         `
       );
+      const columnNames = new Set(columns.map((column) => column.COLUMN_NAME));
 
-      if (!column) {
+      if (!columnNames.has('imei')) {
         await db.query(
           `
           ALTER TABLE detalle_venta
           ADD COLUMN imei VARCHAR(20) NULL DEFAULT NULL AFTER cantidad
+          `
+        );
+      }
+
+      if (!columnNames.has('precio_lista_unitario')) {
+        await db.query(
+          `
+          ALTER TABLE detalle_venta
+          ADD COLUMN precio_lista_unitario DECIMAL(12,2) NULL DEFAULT NULL AFTER precio_unitario
+          `
+        );
+      }
+
+      if (!columnNames.has('descuento_unitario')) {
+        await db.query(
+          `
+          ALTER TABLE detalle_venta
+          ADD COLUMN descuento_unitario DECIMAL(12,2) NOT NULL DEFAULT 0 AFTER precio_lista_unitario
           `
         );
       }

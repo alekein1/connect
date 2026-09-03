@@ -11,7 +11,13 @@ const {
   ensureDetalleVentaImeiColumn,
   ensureVentaAnulacionSchema
 } = require("../services/ventas-schema.service");
-const { buildProductSearchClause } = require("../services/product-search.service");
+const {
+  buildProductSearchClause,
+  normalizeProductSearchQuery
+} = require("../services/product-search.service");
+const {
+  ensureProductBarcodeAliasesTable
+} = require("../services/product-barcode-alias.service");
 
 /* ============================================
    📦 GENERAR SECUENCIAL FACTURA
@@ -104,6 +110,27 @@ function resolvePrecioUnitarioVenta({
   aumentoPorProductoGlobal = 0
 }) {
   const base = round2(precioBase);
+  const aumentoIndividual = getFirstFiniteNumber(
+    item?.aumento_por_producto,
+    item?.aumento,
+    item?.recargo,
+    item?.recargo_tarjeta
+  );
+  const descuentoIndividual = getFirstFiniteNumber(
+    item?.descuento_por_producto,
+    item?.descuento_linea
+  );
+
+  // Los ajustes por producto tienen prioridad y se aplican por unidad.
+  if (aumentoIndividual !== null || descuentoIndividual !== null) {
+    const aumento = Math.max(0, Number(aumentoIndividual || 0));
+    const descuento = Math.min(
+      Math.max(0, Number(descuentoIndividual || 0)),
+      base + aumento
+    );
+    return round2(Math.max(0, base + aumento - descuento));
+  }
+
   const cantidad = Math.max(1, Number(item?.cantidad || 1));
   const totalLineaSolicitado = getFirstFiniteNumber(item?.total_linea, item?.precio_total);
   const precioSolicitado = getFirstFiniteNumber(
@@ -112,13 +139,7 @@ function resolvePrecioUnitarioVenta({
     item?.precio_final,
     totalLineaSolicitado !== null ? totalLineaSolicitado / cantidad : null
   );
-  const aumentoSolicitado = getFirstFiniteNumber(
-    item?.aumento_por_producto,
-    item?.aumento,
-    item?.recargo,
-    item?.recargo_tarjeta,
-    aumentoPorProductoGlobal
-  );
+  const aumentoSolicitado = getFirstFiniteNumber(aumentoPorProductoGlobal);
 
   if (precioSolicitado !== null && precioSolicitado > 0) {
     const precioNormalizado = round2(precioSolicitado);
@@ -837,14 +858,15 @@ function generateComprobantePdfBuffer(venta) {
 
     y += topInfoHeight + 18;
 
-    const columns = [
-      { key: "codigo", label: "COD.", width: 62 },
-      { key: "descripcion", label: "DESCRIPCION", width: 175 },
-      { key: "cantidad", label: "CANT.", width: 40 },
-      { key: "precio", label: "P. UNIT", width: 60 },
-      { key: "subtotal", label: "SUBTOTAL", width: 60 },
-      { key: "iva", label: "IVA", width: 50 },
-      { key: "total", label: "TOTAL", width: 68 }
+      const columns = [
+        { key: "codigo", label: "COD.", width: 62 },
+        { key: "descripcion", label: "DESCRIPCION", width: 175 },
+        { key: "cantidad", label: "CANT.", width: 40 },
+        { key: "precio", label: "P. UNIT", width: 60 },
+        { key: "descuento", label: "DESC.", width: 50 },
+        { key: "subtotal", label: "SUBTOTAL", width: 60 },
+        { key: "iva", label: "IVA", width: 50 },
+        { key: "total", label: "TOTAL", width: 58 }
     ];
 
     const drawTableHeader = headerY => {
@@ -899,6 +921,7 @@ function generateComprobantePdfBuffer(venta) {
         descripcion,
         cantidad: cantidad.toFixed(2),
         precio: formatMoney(precioUnitario),
+        descuento: formatMoney(Number(item.descuento_unitario || 0) * cantidad),
         subtotal: formatMoney(subtotalLinea),
         iva: formatMoney(ivaLinea),
         total: formatMoney(totalLinea)
@@ -964,7 +987,6 @@ function generateComprobantePdfBuffer(venta) {
 
     const totals = [
       ["Subtotal", formatMoney(venta.subtotal)],
-      ["Descuento", formatMoney(venta.descuento)],
       ["IVA 15%", formatMoney(venta.impuesto)],
       ["Total", formatMoney(venta.total)]
     ];
@@ -1157,6 +1179,7 @@ exports.crearVenta = async (req, res) => {
     let totalBruto = 0;
     let totalGravado = 0;
     let totalNoGravado = 0;
+    let descuentosPorProducto = 0;
 
     for (const item of productos) {
       const id_producto = Number(item.id_producto);
@@ -1234,6 +1257,18 @@ exports.crearVenta = async (req, res) => {
         usaTarjeta,
         aumentoPorProductoGlobal
       });
+      const aumentoProducto = Math.max(0, Number(
+        getFirstFiniteNumber(item?.aumento_por_producto, item?.aumento, item?.recargo) || 0
+      ));
+      const descuentoProducto = Math.min(
+        Math.max(0, Number(
+          getFirstFiniteNumber(item?.descuento_por_producto, item?.descuento_linea) || 0
+        )),
+        Number(prod.precio_unitario || 0) + aumentoProducto
+      );
+      const precioListaUnitario = round2(
+        Number(prod.precio_unitario || 0) + aumentoProducto
+      );
       const costo_unitario  = Number(prod.precio_compra || 0);
       const graba_iva = normalizarBooleano(
         item.graba_iva !== undefined ? item.graba_iva : prod.graba_iva
@@ -1250,6 +1285,7 @@ exports.crearVenta = async (req, res) => {
 
       subtotal += subtotal_linea;
       totalBruto += total_linea;
+      descuentosPorProducto += descuentoProducto * cantidad;
       if (graba_iva) {
         totalGravado += total_linea;
       } else {
@@ -1263,6 +1299,8 @@ exports.crearVenta = async (req, res) => {
         imei,
         graba_iva,
         precio_unitario,
+        precio_lista_unitario: precioListaUnitario,
+        descuento_unitario: round2(descuentoProducto),
         subtotal_linea,
         impuesto_linea,
         total_linea,
@@ -1283,11 +1321,12 @@ exports.crearVenta = async (req, res) => {
     totalNoGravado = round2(totalNoGravado);
 
     const descuentoNum = Math.max(0, Number(descuento || 0));
-    const descuentoAplicado = round2(Math.min(descuentoNum, totalBruto));
+    const descuentoGlobalAplicado = round2(Math.min(descuentoNum, totalBruto));
+    const descuentoAplicado = round2(descuentosPorProducto + descuentoGlobalAplicado);
     const descuentoGravado = totalBruto > 0
-      ? round2(descuentoAplicado * (totalGravado / totalBruto))
+      ? round2(descuentoGlobalAplicado * (totalGravado / totalBruto))
       : 0;
-    const descuentoNoGravado = round2(descuentoAplicado - descuentoGravado);
+    const descuentoNoGravado = round2(descuentoGlobalAplicado - descuentoGravado);
 
     // Separar la base e IVA desde el total gravado evita perder 1 centavo.
     const totalGravadoConDescuento = round2(Math.max(0, totalGravado - descuentoGravado));
@@ -1299,7 +1338,7 @@ exports.crearVenta = async (req, res) => {
       ? round2(totalGravadoConDescuento - baseGravadaConDescuento)
       : 0;
     subtotal = round2(baseGravadaConDescuento + totalNoGravadoConDescuento);
-    const total = round2(totalBruto - descuentoAplicado);
+    const total = round2(totalBruto - descuentoGlobalAplicado);
 
     const totalPagos = sumarPagos(pagos);
     const entradaNum = Math.max(0, Number(entrada || 0));
@@ -1407,17 +1446,21 @@ exports.crearVenta = async (req, res) => {
           cantidad,
           imei,
           precio_unitario,
+          precio_lista_unitario,
+          descuento_unitario,
           costo_unitario,
           subtotal,
           costo_total,
           ganancia
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `, [
         id_venta,
         item.id_producto,
         item.cantidad,
         item.imei,
         item.precio_unitario,
+        item.precio_lista_unitario,
+        item.descuento_unitario,
         item.costo_unitario,
         item.subtotal_linea,
         item.costo_total,
@@ -1923,18 +1966,20 @@ exports.anularVentaAdmin = async (req, res) => {
 
 exports.buscarProductoPOS = async (req, res) => {
   try {
+    await ensureProductBarcodeAliasesTable(db);
     const id_local = req.user.id_local;
     const { q } = req.query;
+    const normalizedQuery = normalizeProductSearchQuery(q);
 
-    if (!q) {
+    if (!normalizedQuery) {
       return res.status(400).json({
         ok: false,
         mensaje: "Debe enviar parámetro de búsqueda"
       });
     }
 
-    const searchClause = buildProductSearchClause("p", q);
-    const imeiQuery = String(q || "").replace(/\D+/g, "").trim();
+    const searchClause = buildProductSearchClause("p", normalizedQuery);
+    const imeiQuery = normalizedQuery.replace(/\D+/g, "").trim();
     const shouldSearchByImei = imeiQuery.length >= 6;
 
     if (!searchClause) {
@@ -1944,9 +1989,21 @@ exports.buscarProductoPOS = async (req, res) => {
       });
     }
 
+    const productAliasSearchSql = `EXISTS (
+      SELECT 1
+      FROM producto_codigos_barras pcb
+      WHERE pcb.id_producto = p.id_producto
+        AND pcb.codigo_barras LIKE ?
+    )`;
+    const productSearchSql = `(${searchClause.sql} OR ${productAliasSearchSql})`;
+    const productSearchParams = [
+      ...searchClause.params,
+      `%${normalizedQuery}%`
+    ];
+
     const searchSql = shouldSearchByImei
       ? `(
-          ${searchClause.sql}
+          ${productSearchSql}
           OR EXISTS (
             SELECT 1
             FROM inventario_imei ii
@@ -1959,16 +2016,16 @@ exports.buscarProductoPOS = async (req, res) => {
               )
           )
         )`
-      : searchClause.sql;
+      : productSearchSql;
 
     const searchParams = shouldSearchByImei
       ? [
-          ...searchClause.params,
+          ...productSearchParams,
           id_local,
           `%${imeiQuery}%`,
           `%${imeiQuery}%`
         ]
-      : searchClause.params;
+      : productSearchParams;
 
     const [rows] = await db.query(`
   SELECT 

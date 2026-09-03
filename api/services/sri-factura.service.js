@@ -3,6 +3,7 @@ const path = require("path");
 const db = require("../db/db");
 const { createError } = require("./sri-certificado.service");
 const { ensureSriTables, getSriConfig } = require("./sri-config.service");
+const { ensureDetalleVentaImeiColumn } = require("./ventas-schema.service");
 
 const UPLOADS_ROOT = path.resolve(__dirname, "../uploads");
 const SRI_XML_DIR = path.join(UPLOADS_ROOT, "sri-xml", "facturas");
@@ -129,12 +130,15 @@ async function getVentaBase(idVenta) {
 }
 
 async function getVentaDetalles(idVenta) {
+  await ensureDetalleVentaImeiColumn();
   const [rows] = await db.query(`
     SELECT
       dv.id_detalle,
       dv.id_producto,
       dv.cantidad,
       dv.precio_unitario,
+      dv.precio_lista_unitario,
+      dv.descuento_unitario,
       dv.subtotal,
       p.nombre_producto,
       p.graba_iva,
@@ -255,9 +259,92 @@ function getIvaMeta(grabaIva) {
   };
 }
 
+function buildLineasConDescuentoPorProducto(detalles, venta) {
+  const lineas = detalles.map((item) => {
+    const cantidad = Number(item.cantidad || 0);
+    const ivaMeta = getIvaMeta(item.graba_iva);
+    const divisorIva = ivaMeta.tarifa > 0 ? 1 + ivaMeta.tarifa / 100 : 1;
+    const precioListaUnitario = Math.max(
+      0,
+      Number(item.precio_lista_unitario ?? item.precio_unitario ?? 0)
+    );
+    const descuentoUnitario = Math.min(
+      Math.max(0, Number(item.descuento_unitario || 0)),
+      precioListaUnitario
+    );
+    const totalSinImpuesto = round2(item.subtotal);
+    const impuestoLinea = ivaMeta.tarifa > 0
+      ? round2(totalSinImpuesto * ivaMeta.tarifa / 100)
+      : 0;
+
+    return {
+      id_detalle: item.id_detalle,
+      id_producto: item.id_producto,
+      cantidad,
+      precioUnitarioSinImpuesto: round2(precioListaUnitario / divisorIva),
+      descuentoLinea: round2(descuentoUnitario * cantidad / divisorIva),
+      totalSinImpuesto,
+      impuestoLinea,
+      grossNeto: round2(totalSinImpuesto + impuestoLinea),
+      descripcion: safeText(item.nombre_producto, `PRODUCTO ${item.id_producto}`),
+      codigoPrincipal: safeText(item.sku, String(item.id_producto)),
+      codigoAuxiliar: safeText(item.codigo_barras, safeText(item.sku, null)),
+      grabaIva: ivaMeta.tarifa > 0,
+      ivaMeta
+    };
+  });
+
+  const totalSinImpuestos = round2(
+    lineas.reduce((acc, item) => acc + item.totalSinImpuesto, 0)
+  );
+  const totalDescuento = round2(
+    lineas.reduce((acc, item) => acc + item.descuentoLinea, 0)
+  );
+  const totalImpuesto = round2(
+    lineas.reduce((acc, item) => acc + item.impuestoLinea, 0)
+  );
+  const importeTotal = round2(totalSinImpuestos + totalImpuesto);
+
+  if (Math.abs(totalSinImpuestos - round2(venta.subtotal)) > 0.02 ||
+      Math.abs(totalImpuesto - round2(venta.impuesto)) > 0.02 ||
+      Math.abs(importeTotal - round2(venta.total)) > 0.02) {
+    throw createError("La venta no cuadra con sus descuentos por producto para XML SRI");
+  }
+
+  const totalConImpuestos = [];
+  const baseNoGravada = round2(
+    lineas.filter((item) => !item.grabaIva).reduce((acc, item) => acc + item.totalSinImpuesto, 0)
+  );
+  const baseGravada = round2(
+    lineas.filter((item) => item.grabaIva).reduce((acc, item) => acc + item.totalSinImpuesto, 0)
+  );
+
+  if (baseNoGravada > 0) {
+    totalConImpuestos.push({ codigo: "2", codigoPorcentaje: "0", tarifa: 0, baseImponible: baseNoGravada, valor: 0 });
+  }
+  if (baseGravada > 0) {
+    totalConImpuestos.push({ codigo: "2", codigoPorcentaje: "4", tarifa: 15, baseImponible: baseGravada, valor: totalImpuesto });
+  }
+
+  return {
+    lineas,
+    resumen: {
+      totalSinImpuestos,
+      totalDescuento,
+      totalConImpuestos,
+      totalImpuesto,
+      importeTotal
+    }
+  };
+}
+
 function buildLineasFactura(detalles, venta) {
   if (!Array.isArray(detalles) || detalles.length === 0) {
     throw createError("La venta no tiene detalle y no se puede construir el XML");
+  }
+
+  if (detalles.some((item) => Number(item.descuento_unitario || 0) > 0)) {
+    return buildLineasConDescuentoPorProducto(detalles, venta);
   }
 
   const detalleBase = detalles.map((item) => {

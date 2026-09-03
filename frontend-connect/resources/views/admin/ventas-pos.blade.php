@@ -701,6 +701,7 @@
                             <select id="proveedorFinanciamiento" class="select-pro">
                                 <option value="PAYJOY">PAYJOY</option>
                                 <option value="HAPPY">HAPPY</option>
+                                <option value="GOPHONE">GOPHONE</option>
                             </select>
                         </div>
                     </div>
